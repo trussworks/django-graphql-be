@@ -1,4 +1,4 @@
-from invoke import Collection
+from invoke import Collection  # type:ignore
 from . import db
 
 ns = Collection()

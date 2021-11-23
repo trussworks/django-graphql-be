@@ -1,9 +1,9 @@
-from invoke import task, UnexpectedExit
+from invoke import task, UnexpectedExit  # type:ignore
 import time
 
 
 class Database:
-    def __init__(self, container, name, password, port, docker_port):
+    def __init__(self, container: str, name: str, password: str, port: int, docker_port: int) -> None:
         self.container = container
         self.name = name
         self.password = password
@@ -12,9 +12,9 @@ class Database:
         self.image = 'postgres:12.7'
         self.psql_cmd = '/usr/local/bin/psql --variable "ON_ERROR_STOP=1"'
 
-    def conninfo(self, db=''):
+    def conninfo(self, db: str = '') -> str:
         """
-        Returns a connection info string to use with psql command
+        Returns a connection info string to use with psql command.
         Defaults to no specific db, select db if needed
         """
         return 'postgres://postgres:{pwd}@localhost:{port}/{db}'.format(
@@ -23,9 +23,9 @@ class Database:
             db=db
         )
 
-    def check(self, c, db='', retry=3, sleep=1):
+    def check(self, c, db: str = '', retry: int = 3, sleep: int = 1) -> None:
         """
-            Attempt to connect to the postgres instance
+        Attempt to connect to the postgres instance.
         """
 
         for i in range(retry):
@@ -46,7 +46,10 @@ class Database:
             print("Success! Connected.")
             break
 
-    def create(self, c):
+    def create(self, c) -> None:
+        """
+        Create a database in the docker container
+        """
         cmd = 'CREATE DATABASE {};'.format(self.name)
         print(cmd)
         c.run('{psql} {conn} -c "{cmd}"'.format(
@@ -57,6 +60,7 @@ class Database:
         print("Success! Created database {}".format(self.name))
 
 
+# Database details to be used for these commands
 db = Database(
     container='sith-dev-db',
     name='dev_db',
@@ -64,18 +68,12 @@ db = Database(
     port=5433,
     docker_port=5432,
 )
-# docker start sith-dev-db || \
-# 	docker run -d --name sith-dev-db \
-# 		-e POSTGRES_PASSWORD=secretpassword \
-# 		-p 5432:543 \
-# 		postgres:12.7
 
 
 @task
-def start(c):
+def start(c) -> None:
     """
-    Starts the docker container with the database. If the docker container doesn't exist, 
-    creates and runs it.
+    Restart (or create) the docker container with the database
     """
     print("Start the database container")
     result = None
@@ -99,7 +97,7 @@ def start(c):
 
 
 @task(pre=[start])
-def create(c):
+def create(c) -> None:
     """
     Create the database in the docker container
     """
@@ -112,7 +110,7 @@ def create(c):
 
 
 @task()
-def check(c):
+def check(c) -> None:
     """
     Check that you can connect to the database in the docker container
     """
@@ -124,7 +122,7 @@ def check(c):
 
 
 @task()
-def destroy(c):
+def destroy(c) -> None:
     """
     Destroy the database and the docker container
     """
