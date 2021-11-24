@@ -1,5 +1,6 @@
-from invoke import task, UnexpectedExit  # type:ignore
+from invoke import task, UnexpectedExit
 import time
+from typing import Any
 
 
 class Database:
@@ -71,7 +72,8 @@ db = Database(
 
 
 @task
-def start(c) -> None:
+def start(c):
+    # type: (Any) -> None
     """
     Restart (or create) the docker container with the database
     """
@@ -97,7 +99,8 @@ def start(c) -> None:
 
 
 @task(pre=[start])
-def create(c) -> None:
+def create(c):
+    # type: (Any) -> None
     """
     Create the database in the docker container
     """
@@ -110,7 +113,8 @@ def create(c) -> None:
 
 
 @task()
-def check(c) -> None:
+def check(c):
+    # type: (Any) -> None
     """
     Check that you can connect to the database in the docker container
     """
@@ -122,7 +126,8 @@ def check(c) -> None:
 
 
 @task()
-def destroy(c) -> None:
+def destroy(c):
+    # type: (Any) -> None
     """
     Destroy the database and the docker container
     """
