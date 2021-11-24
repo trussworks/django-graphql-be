@@ -79,6 +79,7 @@ def start(c):
     """
     print("Start the database container")
     result = None
+    create_db = False
     try:
         if c.run('docker start {dckr}'.format(dckr=db.container)):
             print("Success! Container {} running".format(db.container))
@@ -94,8 +95,17 @@ def start(c):
                            pint=db.docker_port,
                            pver=db.image
                        ))
-        if result.return_code == 0:
-            print("Success! Container {} running".format(db.container))
+
+        # ^^ c.run by default exits if a command fails
+        print("Success! Container {} running".format(db.container))
+        create_db = True
+
+    if create_db:
+        try:
+            db.check(c)
+            db.create(c)
+        except UnexpectedExit as e:
+            print("Error executing: {}".format(e.result.command))
 
 
 @task(pre=[start])
@@ -109,7 +119,6 @@ def create(c):
         db.create(c)
     except UnexpectedExit as e:
         print("Error executing: {}".format(e.result.command))
-        # c.run('echo yes')
 
 
 @task()
