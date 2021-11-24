@@ -24,7 +24,7 @@ class Database:
             db=db
         )
 
-    def check(self, c, db: str = '', retry: int = 3, sleep: int = 1) -> None:
+    def check(self, c: Any, db: str = '', retry: int = 3, sleep: int = 1) -> None:
         """
         Attempt to connect to the postgres instance.
         """
@@ -47,7 +47,7 @@ class Database:
             print("Success! Connected.")
             break
 
-    def create(self, c) -> None:
+    def create(self, c: Any) -> None:
         """
         Create a database in the docker container
         """
@@ -71,7 +71,7 @@ db = Database(
 )
 
 
-@task
+@task(default=True)
 def start(c):
     # type: (Any) -> None
     """
