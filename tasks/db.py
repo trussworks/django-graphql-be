@@ -18,11 +18,7 @@ class Database:
         Returns a connection info string to use with psql command.
         Defaults to no specific db, select db if needed
         """
-        return 'postgres://postgres:{pwd}@localhost:{port}/{db}'.format(
-            pwd=self.password,
-            port=self.port,
-            db=db
-        )
+        return f"postgres://postgres:{self.password}@localhost:{self.port}/{db}"
 
     def check(self, c: Any, db: str = '', retry: int = 3, sleep: int = 1) -> None:
         """
@@ -31,12 +27,8 @@ class Database:
 
         for i in range(retry):
             try:
-                c.run('{psql} {conn} -c {cmd}'.format(
-                    psql=self.psql_cmd,
-                    conn=self.conninfo(),
-                    cmd='SELECT 1;'
-                ), hide=True)
-            except UnexpectedExit as e:
+                c.run(f"{self.psql_cmd} {self.conninfo()} -c 'SELECT 1;'", hide=True)
+            except UnexpectedExit:
                 print("Could not connect to db, retrying...")
                 time.sleep(sleep)
                 if i < retry - 1:
@@ -51,17 +43,14 @@ class Database:
         """
         Create a database in the docker container
         """
-        cmd = 'CREATE DATABASE {};'.format(self.name)
+        cmd = f"CREATE DATABASE {self.name};"
         print(cmd)
-        c.run('{psql} {conn} -c "{cmd}"'.format(
-            psql=self.psql_cmd,
-            conn=self.conninfo(),
-            cmd=cmd
-        ))
-        print("Success! Created database {}".format(self.name))
+        c.run(f"{self.psql_cmd} {self.conninfo()} -c \"{cmd}\"")
+        print(f"Success! Created database {self.name}")
 
 
 # Database details to be used for these commands
+# TODO: Should move some of these to environment variables SP-89
 db = Database(
     container='sith-dev-db',
     name='dev_db',
@@ -81,23 +70,17 @@ def start(c):
     result = None
     create_db = False
     try:
-        if c.run('docker start {dckr}'.format(dckr=db.container)):
-            print("Success! Container {} running".format(db.container))
+        c.run(f"docker start {db.container}")
+        print(f"Success! Container {db.container} running")
 
     except UnexpectedExit:
 
         print("Unable to start container, create a new database container")
-        result = c.run('docker run -d --name {dckr} -e POSTGRES_PASSWORD={pwd} -p {pext}:{pint} {pver}'
-                       .format(
-                           dckr=db.container,
-                           pwd=db.password,
-                           pext=db.port,
-                           pint=db.docker_port,
-                           pver=db.image
-                       ))
+        result = c.run(
+            f"docker run -d --name {db.container} -e POSTGRES_PASSWORD={db.password} -p {db.port}:{db.docker_port} {db.image}")
 
         # ^^ c.run by default exits if a command fails
-        print("Success! Container {} running".format(db.container))
+        print(f"Success! Container {db.container} running")
         create_db = True
 
     if create_db:
@@ -105,7 +88,7 @@ def start(c):
             db.check(c)
             db.create(c)
         except UnexpectedExit as e:
-            print("Error executing: {}".format(e.result.command))
+            print(f"Error executing: {e.result.command}")
 
 
 @task(pre=[start])
@@ -118,7 +101,7 @@ def create(c):
         db.check(c)
         db.create(c)
     except UnexpectedExit as e:
-        print("Error executing: {}".format(e.result.command))
+        print(f"Error executing: {e.result.command}")
 
 
 @task()
@@ -127,11 +110,11 @@ def check(c):
     """
     Check that you can connect to the database in the docker container
     """
-    print("Connecting to {}".format(db.name))
+    print(f"Connecting to {db.name}")
     try:
         db.check(c, db=db.name)
     except UnexpectedExit as e:
-        print("Error executing: {}".format(e.result.command))
+        print(f"Error executing: {e.result.command}")
 
 
 @task()
@@ -140,5 +123,5 @@ def destroy(c):
     """
     Destroy the database and the docker container
     """
-    print("Destroying container {}".format(db.container))
-    c.run('docker rm -f {}'.format(db.container))
+    print(f"Destroying container {db.container}")
+    c.run(f"docker rm -f {db.container}")
