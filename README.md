@@ -16,7 +16,7 @@ Use the package manager `pip` to install the packages.
 pip install -r requirements.txt
 ```
 
-This project uses Invoke to aggregate all useful commands and scripts. Run invoke from the top level folder.
+This project uses [PyInvoke](https://www.pyinvoke.org/) to aggregate all useful commands and scripts. Run `invoke` or `inv` from the top level folder.
 
 ```sh
 > inv -l
