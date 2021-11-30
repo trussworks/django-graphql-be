@@ -16,6 +16,14 @@ Use the package manager `pip` to install the packages.
 pip install -r requirements.txt
 ```
 
+This project uses Invoke to aggregate all useful commands and scripts. Run invoke from the top level folder.
+
+```sh
+> inv -l
+````
+
+Read more about [invoke here](https://truss-dds.atlassian.net/wiki/spaces/eng/pages/50790405/Invoke).
+
 ### Install and Create Database
 
 The database is a postgres container which runs inside a docker container.
