@@ -80,8 +80,7 @@ inv db.start
 Run the server
 
 ```sh
-cd sith_django
-python manage.py runserver
+python server/manage.py runserver
 ```
 
 You should be able to access the graphql browser at `http://127.0.0.1:8000/graphql`
