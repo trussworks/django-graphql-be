@@ -40,7 +40,7 @@ class Database:
             print("Success! Connected.")
             break
 
-    def create(self, c: Context) -> None:  # type: ignore[no-any-unimported]
+    def create(self, c: Context) -> None: 
         """
         Create a database in the docker container
         """

@@ -1,14 +1,12 @@
 import json
 
-from django.test import TestCase
-from graphene.test import Client
 from graphene_django.utils.testing import GraphQLTestCase
 from snapshottest.django import TestCase as SnapshotTestCase
 
 
-class HelloTestCase(GraphQLTestCase, SnapshotTestCase):
+class HelloTestCase(GraphQLTestCase, SnapshotTestCase):  #type: ignore[no-any-unimported]
 
-    def test_hello(self):
+    def test_hello(self) -> None:
         response = self.query('''
             query {
                 hello
