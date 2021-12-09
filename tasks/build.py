@@ -1,5 +1,9 @@
-from invoke import task, UnexpectedExit, Context
+import os
+import pprint
 from typing import Any
+
+from invoke import Context, UnexpectedExit, task, Config, tasks
+from .common import server_path
 
 
 @task
@@ -11,21 +15,11 @@ def mypy(c):
     c.run('mypy tasks')
     c.run('mypy server')
 
-@task
-def test(c):
-    # type: (Context) -> None
+@task(help={"snapshot_update": "Updates testing snapshots if needed"})
+def test(c, snapshot_update=False):
+    # type: (Context, bool) -> None
     """
     Runs all tests available on the server
     """
-    with c.cd('server/'):
+    with c.cd(server_path()):
         c.run('python manage.py test')
-
-
-@task
-def snapshot_update(c):
-    # type: (Context) -> None
-    """
-    Runs all tests and overwrites snapshots for all snapshot tests
-    """
-    with c.cd('server/'):
-        c.run('python manage.py test --snapshot-update')
