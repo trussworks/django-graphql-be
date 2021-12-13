@@ -32,12 +32,15 @@ This will install the versions we have dictated in the `.tool-versions` file.
 
 #### `direnv` additional steps
 
-Direnv must also be added to your shell profile file to work properly. Follow [the official instructions](https://github.com/direnv/direnv/blob/master/docs/hook.md) 
+Direnv must also be added to your shell profile file (`.bashrc`, `.zshrc`, etc) to work properly. Follow [the official instructions](https://github.com/direnv/direnv/blob/master/docs/hook.md) 
 for whichever shell you use, and then change `direnv` to `asdf exec direnv`. If you use `zsh`, this will look like:
 
 ```shell
+# Set in ~/.zshrc :
 eval "$(asdf exec direnv hook zsh)"
 ```
+
+Once you have finished updating your shell's profile file, run `direnv allow` to activate `direnv` in this folder.
 
 ### Install Python Packages
 
