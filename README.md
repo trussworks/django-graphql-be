@@ -4,7 +4,45 @@ The SITH backend is a django-based backend for the System for Insider Threat Hin
 
 ## Usage
 
-### Install Python and Packages
+### Install tools with `asdf`
+
+We use `asdf` to manage our tool versions. Currently, `asdf` manages:
+
+* [Python](https://github.com/danhper/asdf-python)
+* [direnv](https://github.com/asdf-community/asdf-direnv)
+
+Install `asdf` using [the instructions in their official documentation](https://asdf-vm.com/guide/getting-started.html#getting-started). 
+This will involve a step to modify your shell profile file--make sure you do this to complete the installation. 
+If you are unsure which of the instructions apply to you, reach out to the team and we'll help you figure it out.
+
+You will also need to add the following plug-ins:
+
+```shell
+asdf plugin add python
+asdf plugin add direnv
+```
+
+Finally, `cd` into the repository folder and run:
+
+```shell
+asdf install
+```
+
+This will install the versions we have dictated in the `.tool-versions` file.
+
+#### `direnv` additional steps
+
+Direnv must also be added to your shell profile file (`.bashrc`, `.zshrc`, etc) to work properly. Follow [the official instructions](https://github.com/direnv/direnv/blob/master/docs/hook.md) 
+for whichever shell you use, and then change `direnv` to `asdf exec direnv`. If you use `zsh`, this will look like:
+
+```shell
+# Set in ~/.zshrc :
+eval "$(asdf exec direnv hook zsh)"
+```
+
+Once you have finished updating your shell's profile file, run `direnv allow` to activate `direnv` in this folder.
+
+### Install Python Packages
 
 This project is compatible with Python 3.9.
 
@@ -45,8 +83,7 @@ inv db.start
 Run the server
 
 ```sh
-cd sith_django
-python manage.py runserver
+python server/manage.py runserver
 ```
 
 You should be able to access the graphql browser at `http://127.0.0.1:8000/graphql`
