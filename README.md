@@ -30,7 +30,8 @@ Finally, `cd` into the repository folder and run:
 asdf install
 ```
 
-This will install the versions we have dictated in the `.tool-versions` file.
+This will install the versions we have dictated in the `.tool-versions` file. Your shell may prompt you to run 
+additional commands to activate the newly installed tools. You may also need to restart your shell.
 
 #### `direnv` additional steps
 
