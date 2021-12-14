@@ -1,26 +1,25 @@
 import json
 
-from graphene_django.utils.testing import GraphQLTestCase
-from snapshottest.django import TestCase as SnapshotTestCase
+from django.http import HttpResponse
+from snapshottest.pytest import PyTestSnapshotTest
+
+from .conftest import ClientQueryType
 
 
-class HelloTestCase(GraphQLTestCase, SnapshotTestCase):  #type: ignore[no-any-unimported]
+class TestHello:
 
-    def test_hello(self) -> None:
-        response = self.query('''
+    def test_hello(  # type: ignore[no-any-unimported]
+            self, client_query: ClientQueryType, snapshot: PyTestSnapshotTest) -> None:
+        """Test the hello query in the GraphQL schema/API definition"""
+        response: HttpResponse = client_query(
+            '''
             query {
                 hello
             }
-            ''',)
+            '''
+        )
+        assert response.status_code == 200, f"The response failed with a {response.status_code} status code."
 
-        content = json.loads(response.content)
-
-        # This validates the status code and if you get errors
-        self.assertResponseNoErrors(response)
-
-        # This line checks a specific field
-        assert content["data"]["hello"] == "Hello World!"
-
+        content: dict = json.loads(response.content)
         # This line makes a snapshot the first time, then compares against the snapshot
-        self.assertMatchSnapshot(response)
-        self.assertMatchSnapshot(content)
+        snapshot.assert_match(content)

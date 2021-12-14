@@ -2,14 +2,12 @@
 # snapshottest: v1 - https://goo.gl/zC4yUc
 from __future__ import unicode_literals
 
-from snapshottest import GenericRepr, Snapshot
+from snapshottest import Snapshot
 
 
 snapshots = Snapshot()
 
-snapshots['HelloTestCase::test_hello 1'] = GenericRepr('<HttpResponse status_code=200, "application/json">')
-
-snapshots['HelloTestCase::test_hello 2'] = {
+snapshots['TestHello.test_hello 1'] = {
     'data': {
         'hello': 'Hello World!'
     }
