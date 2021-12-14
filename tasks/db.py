@@ -55,8 +55,8 @@ class Database:
 # Database details to be used for these commands
 db = Database(
     container='sith-dev-db',
-    name=os.environ.get('DB_NAME'),
-    password=os.environ.get('DB_PASSWORD'),
+    name=os.environ.get('DB_NAME', ''),
+    password=os.environ.get('DB_PASSWORD', ''),
     port=cast(int, os.environ.get('DB_PORT')),
     docker_port=5432,
 )
