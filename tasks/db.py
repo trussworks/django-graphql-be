@@ -53,7 +53,6 @@ class Database:
 
 
 # Database details to be used for these commands
-# TODO: Should move some of these to environment variables SP-89
 db = Database(
     container='sith-dev-db',
     name=os.environ.get('DB_NAME'),
