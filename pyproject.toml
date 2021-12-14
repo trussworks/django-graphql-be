@@ -26,3 +26,12 @@ snapshottest = "^0.6.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "app.settings"
+minversion = "6.0"
+python_files = [
+    "tests.py",
+    "test_*.py",
+    "*_tests.py",
+]
