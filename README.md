@@ -102,7 +102,7 @@ inv db.start
 Run the server
 
 ```sh
-python server/manage.py runserver
+python manage.py runserver
 ```
 
 You should be able to access the graphql browser at `http://127.0.0.1:8000/graphql`
