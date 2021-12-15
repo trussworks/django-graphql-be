@@ -1,11 +1,12 @@
 import os
 import time
-from typing import Any, cast
+from typing import cast
 
-from invoke import task, UnexpectedExit
+from invoke import task, UnexpectedExit, Context
 
 
 class Database:
+
     def __init__(self, container: str, name: str, password: str, port: int, docker_port: int) -> None:
         self.container = container
         self.name = name
@@ -22,7 +23,7 @@ class Database:
         """
         return f"postgres://postgres:{self.password}@localhost:{self.port}/{db}"
 
-    def check(self, c: Any, db: str = '', retry: int = 3, sleep: int = 1) -> None:
+    def check(self, c: Context, db: str = '', retry: int = 3, sleep: int = 1) -> None: #type: ignore[no-any-unimported]
         """
         Attempt to connect to the postgres instance.
         """
@@ -41,7 +42,7 @@ class Database:
             print("Success! Connected.")
             break
 
-    def create(self, c: Any) -> None:
+    def create(self, c: Context) -> None:  #type: ignore[no-any-unimported]
         """
         Create a database in the docker container
         """
@@ -52,19 +53,18 @@ class Database:
 
 
 # Database details to be used for these commands
-# TODO: Should move some of these to environment variables SP-89
 db = Database(
     container='sith-dev-db',
-    name=os.environ.get('DB_NAME'),
-    password=os.environ.get('DB_PASSWORD'),
+    name=os.environ.get('DB_NAME', ''),
+    password=os.environ.get('DB_PASSWORD', ''),
     port=cast(int, os.environ.get('DB_PORT')),
     docker_port=5432,
 )
 
 
 @task(default=True)
-def start(c):
-    # type: (Any) -> None
+def start(c): #type: ignore[no-any-unimported]
+    # type: (Context) -> None
     """
     Restart (or create) the docker container with the database
     """
@@ -79,7 +79,8 @@ def start(c):
 
         print("Unable to start container, create a new database container")
         result = c.run(
-            f"docker run -d --name {db.container} -e POSTGRES_PASSWORD={db.password} -p {db.port}:{db.docker_port} {db.image}")
+            f"docker run -d --name {db.container} -e POSTGRES_PASSWORD={db.password} -p {db.port}:{db.docker_port} {db.image}"
+        )
 
         # ^^ c.run by default exits if a command fails
         print(f"Success! Container {db.container} running")
@@ -94,8 +95,8 @@ def start(c):
 
 
 @task(pre=[start])
-def create(c):
-    # type: (Any) -> None
+def create(c): #type: ignore[no-any-unimported]
+    # type: (Context) -> None
     """
     Create the database in the docker container
     """
@@ -107,8 +108,8 @@ def create(c):
 
 
 @task()
-def check(c):
-    # type: (Any) -> None
+def check(c): #type: ignore[no-any-unimported]
+    # type: (Context) -> None
     """
     Check that you can connect to the database in the docker container
     """
@@ -120,8 +121,8 @@ def check(c):
 
 
 @task()
-def destroy(c):
-    # type: (Any) -> None
+def destroy(c): #type: ignore[no-any-unimported]
+    # type: (Context) -> None
     """
     Destroy the database and the docker container
     """
