@@ -25,7 +25,7 @@ class Case(models.Model):
     summary = models.CharField(max_length=200, null=True, blank=True)
     color_code = models.CharField(max_length=6, choices=constants.COLOR_CODE_CHOICES, null=True, blank=True)
     status = models.CharField(max_length=20, choices=constants.STATUS_CHOICES, null=True, blank=True)
-    received_at = models.DateTimeField()
+    received_at = models.DateTimeField(null=True)
 
     # Set automatically when created/updated:
     created_at = models.DateTimeField(auto_now_add=True)
