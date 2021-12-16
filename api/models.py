@@ -29,3 +29,6 @@ class Case(models.Model):
     # Set automatically when created/updated:
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return f"{self.subject} - {self.summary if self.summary else '[N/A]'}"
