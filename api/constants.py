@@ -15,13 +15,13 @@ COLOR_CODE_CHOICES = [
 ]
 
 # Status options for SITH cases
-STATUS_OPEN = "open"
+STATUS_PRE_INQUIRY = "pre-inquiry"
 STATUS_IN_PROGRESS = "in progress"
-STATUS_CLOSED = "closed"
+STATUS_INACTIVE = "zero - inactive"
 
 STATUS_CHOICES = [
     # (database value, display value)
-    (STATUS_OPEN, STATUS_OPEN),
+    (STATUS_PRE_INQUIRY, STATUS_PRE_INQUIRY),
     (STATUS_IN_PROGRESS, STATUS_IN_PROGRESS),
-    (STATUS_CLOSED, STATUS_CLOSED),
+    (STATUS_INACTIVE, STATUS_INACTIVE),
 ]
