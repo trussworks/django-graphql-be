@@ -8,12 +8,12 @@ from django.db.models import QuerySet
 from .models import Person, Case
 
 
-class PersonType(DjangoObjectType):
+class PersonType(DjangoObjectType):  # type: ignore[no-any-unimported]
     class Meta:
         model = Person
 
 
-class CaseType(DjangoObjectType):
+class CaseType(DjangoObjectType):  # type: ignore[no-any-unimported]
     class Meta:
         model = Case
 
