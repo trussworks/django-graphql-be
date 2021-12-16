@@ -8,7 +8,7 @@ def mypy(c):  # type: ignore[no-any-unimported]
     """
     Runs the mypy type check on all python folders
     """
-    for mypy_dir in ['tasks', 'server']:
+    for mypy_dir in ['tasks', 'server', 'api']:
         print(f"Checking {mypy_dir}...")
         try:
             c.run(f'mypy {mypy_dir}')
@@ -24,4 +24,4 @@ def test(c, snapshot_update=False):  # type: ignore[no-any-unimported]
     """
     if snapshot_update:
         print("Updating snapshots...")
-    c.run(f'pytest server{" --snapshot-update" if snapshot_update else ""}')
+    c.run(f'pytest{" --snapshot-update" if snapshot_update else ""}')
