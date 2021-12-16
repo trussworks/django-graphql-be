@@ -22,7 +22,7 @@ class TestModelPerson:
             ("", ""),
         ],
     )
-    def test_str(self, first_name, last_name) -> None:
+    def test_str(self, first_name: str, last_name: str) -> None:
         """Test that the string representation of a Person is what we expect"""
 
         # NOTE: This does NOT save a Person on the database.
@@ -81,7 +81,7 @@ class TestModelCase:
     def test_choice_failure(self) -> None:
         """Test that updating a `color_code` or `status` to an option not in the choices FAILS"""
         fake_color_code = "fake"
-        assert fake_color_code not in COLOR_CODE_CHOICES
+        assert not any(fake_color_code in choice for choice in COLOR_CODE_CHOICES)
 
         case = Case(subject=self.create_subject(), received_at=datetime.now(), color_code=fake_color_code)
 
