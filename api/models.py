@@ -1,10 +1,10 @@
-
+"""Model definitions for DB schema"""
 from django.db import models
 
 from . import constants
 
 
-class Person(models.Model):
+class Person(models.Model):  # type: ignore[misc]
     first_name = models.CharField(max_length=80, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
 
@@ -19,7 +19,7 @@ class Person(models.Model):
         return f"{self.last_name}, {self.first_name}"
 
 
-class Case(models.Model):
+class Case(models.Model):  # type: ignore[misc]
     subject = models.ForeignKey(Person, related_name="cases", on_delete=models.PROTECT)
     analyst = models.ForeignKey(Person, related_name="cases_assigned", on_delete=models.SET_NULL, null=True, blank=True)
     summary = models.CharField(max_length=200, null=True, blank=True)
