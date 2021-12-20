@@ -2,6 +2,7 @@
 Define fixtures and other config elements for tests.
 `conftest.py` is a pytest standard file.
 """
+from os import path
 from typing import Callable, Union, cast
 
 import pytest
@@ -10,6 +11,9 @@ from django.test.client import Client
 from django.http import HttpResponse
 from snapshottest.pytest import PyTestSnapshotTest
 from graphene_django.utils.testing import graphql_query
+
+API_TESTS_DIR: str = path.dirname(__file__)
+API_TESTS_DATA_DIR: str = path.join(API_TESTS_DIR, 'data/')
 
 # typing.ParamSpec would be a compelling alternative to Union here (and TypeVar elsewhere),
 # but it is only available in Python >=3.10
