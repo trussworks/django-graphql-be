@@ -25,3 +25,23 @@ def test(c, snapshot_update=False):  # type: ignore[no-any-unimported]
     if snapshot_update:
         print("Updating snapshots...")
     c.run(f'pytest{" --snapshot-update" if snapshot_update else ""}')
+
+
+@task
+def format(c):  # type: ignore[no-any-unimported]
+    # type: (Context) -> None  # ignores Context type
+    """
+    Formats the code using yapf
+    """
+    c.run('yapf --in-place --recursive --parallel .')
+    print('Formatting complete')
+
+
+@task(pre=[mypy, format])
+def tidy(c):  # type: ignore[no-any-unimported]
+    # type: (Context) -> None  # ignores Context type
+    """
+    Runs all formatters, linters and static code analysis
+    Most are run as prerequisites.
+    """
+    print("Build tidy completed")
