@@ -491,10 +491,18 @@ category = "main"
 optional = false
 python-versions = "*"
 
+[[package]]
+name = "yapf"
+version = "0.32.0"
+description = "A formatter for Python code."
+category = "dev"
+optional = false
+python-versions = "*"
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "4d57061b653c8602618aafba642ed26ac85785c0a0ec0232b19c3558dc0bc25a"
+content-hash = "7befc1e1ed8609b2b18ca6ac922e45f387fc51c74433616b068e20a1fe041f89"
 
 [metadata.files]
 aniso8601 = [
@@ -776,4 +784,8 @@ wasmer-compiler-cranelift = [
     {file = "wasmer_compiler_cranelift-1.0.0-cp39-cp39-manylinux2010_x86_64.whl", hash = "sha256:4b15a38b0a22c921ea112a50bdc86ca7a302ed2fd082e57a5c409781b960fbba"},
     {file = "wasmer_compiler_cranelift-1.0.0-cp39-none-win_amd64.whl", hash = "sha256:dab69907c3b358ad538846af3f6e9f04ed8a88b40eb63ad434a1098b2c62ee2d"},
     {file = "wasmer_compiler_cranelift-1.0.0-py3-none-any.whl", hash = "sha256:081fdc24eaaac951b84efb6c7e439ccbda8b46f512b8ae2707bcb29763d15a49"},
+]
+yapf = [
+    {file = "yapf-0.32.0-py2.py3-none-any.whl", hash = "sha256:8fea849025584e486fd06d6ba2bed717f396080fd3cc236ba10cb97c4c51cf32"},
+    {file = "yapf-0.32.0.tar.gz", hash = "sha256:a3f5085d37ef7e3e004c4ba9f9b3e40c54ff1901cd111f05145ae313a7c67d1b"},
 ]
