@@ -1,6 +1,8 @@
 """Utilities to improve query efficiency with Django + GraphQL"""
+from typing import cast
+
 from stringcase import snakecase
-from graphql.language.ast import Field
+from graphql.language.ast import Field, SelectionSet
 import graphene
 from django.db.models import QuerySet
 
@@ -8,8 +10,8 @@ from django.db.models import QuerySet
 class DjangoQueryMixin:
     """Add query optimization to `graphene_django.DjangoObjectType` using the Django base ORM"""
 
-    select_fields: tuple[str] = ()  # field arguments for a `select_related()` method call
-    prefetch_fields: tuple[str] = ()  # field arguments for a `prefetch_related()` method call
+    select_fields: tuple[str, ...] = ()  # field arguments for a `select_related()` method call
+    prefetch_fields: tuple[str, ...] = ()  # field arguments for a `prefetch_related()` method call
 
     @classmethod
     def build_optimized_query(cls, info: graphene.ResolveInfo) -> QuerySet:
@@ -26,7 +28,8 @@ class DjangoQueryMixin:
         # We need this to know that a query has even been requested - without it, we would have no idea what the client
         # wants from us.
         # We will let the IndexError/AttributeError raise if it doesn't exist because that would be extremely peculiar.
-        select_args, prefetch_args = cls._find_query_args(info.field_asts[0].selection_set.selections)
+        select_args, prefetch_args = \
+            cls._find_query_args(cast(SelectionSet, info.field_asts[0].selection_set).selections)
 
         if select_args:
             query = query.select_related(*select_args)
