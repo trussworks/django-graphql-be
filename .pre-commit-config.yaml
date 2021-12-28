@@ -8,7 +8,7 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
-  # Note: the YAPF config is found in `.style.yapf` and `.yapfignore`
+  # Note: the YAPF config is found in `.style.yapf` and ignore files in `.pyproject.toml`
   - repo: https://github.com/pre-commit/mirrors-yapf
     rev: v0.29.0
     hooks:
