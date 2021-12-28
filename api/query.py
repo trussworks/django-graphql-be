@@ -17,12 +17,13 @@ class DjangoQueryMixin:
     def build_optimized_query(cls, info: graphene.ResolveInfo) -> QuerySet:
         """Build an optimized QuerySet to be executed in a GraphQL query resolver.
 
-        :param info: The Graphene object type that contains all pertinent information about the requested query.
-
-        :return: A QuerySet that has been optimized but not resolved. Must be called with `.all()` or `.filter(...)`
-        once returned..
+        :param info:
+            The Graphene object type that contains all pertinent information about the requested query.
+        :return:
+            A QuerySet that has been optimized but not resolved. Must be called with `.all()` or `.filter(...)` once
+            returned.
         """
-        # Model is defined in the metaclass for `graphene_django.DjangoObjectType`,
+        # `cls._meta.model` is defined within the metaclass for `graphene_django.DjangoObjectType`,
         # and this mixin MUST be used with the DjangoObjectType class
         query = cls._meta.model.objects  # type: ignore[attr-defined]
 
@@ -45,13 +46,14 @@ class DjangoQueryMixin:
     def _find_query_args(cls, fields: list[Field], field_prefix: str = "") -> tuple[list[str], list[str]]:
         """Find arguments needed to optimize a query for the requested fields.
 
-        :param fields: A list of `graphql.Field` objects that contain the information of each field requested.
-
-        :param field_prefix: A string prefix that is added onto each requested field name before searching for the field
-        in `cls.select_fields` or `cls.prefetch_fields`. Demonstrates relationships between related Django models.
-
-        :return: A tuple with two lists. The first contains all arguments that should be passed into a `select_related`
-        method on a QuerySet. The second contains all `prefetch_related` args.
+        :param fields:
+            A list of `graphql.Field` objects that contain the information for each field requested.
+        :param field_prefix:
+            A string prefix that is added onto each requested field name before searching for the field in
+            `cls.select_fields` or `cls.prefetch_fields`. Demonstrates relationships between related Django models.
+        :return:
+            A tuple with two lists. The first contains all arguments that should be passed into a `select_related`
+            method on a QuerySet. The second contains all `prefetch_related` args.
         """
         select_args: list[str] = []
         prefetch_args: list[str] = []
