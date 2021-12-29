@@ -1,25 +1,6 @@
 """Tasks to build and test the server"""
 from invoke import Context, task, exceptions
 
-mine = {
-    'new jersey': {
-        'mercer county': {
-            'plumbers': 3,
-            'programmers': 81
-        },
-        'middlesex county': {
-            'programmers': 81,
-            'salesmen': 62
-        }
-    },
-    'new york': {
-        'queens county': {
-            'plumbers': 9,
-            'salesmen': 36
-        }
-    }
-}
-
 
 @task
 def mypy(c):  # type: ignore[no-any-unimported]
@@ -47,16 +28,17 @@ def test(c, snapshot_update=False):  # type: ignore[no-any-unimported]
 
 
 @task
-def format(c):  # type: ignore[no-any-unimported]
+def format_code(c):  # type: ignore[no-any-unimported]
     # type: (Context) -> None  # ignores Context type
     """
     Formats the code using yapf
     """
+    print("Formatting code...")
     c.run('yapf --in-place --recursive --parallel .')
     print('Formatting complete')
 
 
-@task(pre=[mypy, format])
+@task(pre=[mypy, format_code])
 def tidy(c):  # type: ignore[no-any-unimported]
     # type: (Context) -> None  # ignores Context type
     """
