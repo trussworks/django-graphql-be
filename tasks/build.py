@@ -24,6 +24,7 @@ def test(c, snapshot_update=False):  # type: ignore[no-any-unimported]
     """
     if snapshot_update:
         print("Updating snapshots...")
+    # Run tests (with flags if necessary)
     c.run(f'pytest{" --snapshot-update" if snapshot_update else ""}')
 
 
