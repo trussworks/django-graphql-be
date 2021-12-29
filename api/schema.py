@@ -9,11 +9,13 @@ from .models import Person, Case
 
 
 class PersonType(DjangoObjectType):  # type: ignore[no-any-unimported]
+
     class Meta:
         model = Person
 
 
 class CaseType(DjangoObjectType):  # type: ignore[no-any-unimported]
+
     class Meta:
         model = Case
 
