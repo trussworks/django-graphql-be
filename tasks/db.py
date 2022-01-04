@@ -23,7 +23,7 @@ class Database:
         """
         return f"postgres://postgres:{self.password}@localhost:{self.port}/{db}"
 
-    def check(self, c: Context, db: str = '', retry: int = 3, sleep: int = 1) -> None: #type: ignore[no-any-unimported]
+    def check(self, c: Context, db: str = '', retry: int = 3, sleep: int = 1) -> None:  #type: ignore[no-any-unimported]
         """
         Attempt to connect to the postgres instance.
         """
@@ -63,7 +63,7 @@ db = Database(
 
 
 @task(default=True)
-def start(c): #type: ignore[no-any-unimported]
+def start(c):  #type: ignore[no-any-unimported]
     # type: (Context) -> None
     """
     Restart (or create) the docker container with the database
@@ -95,7 +95,7 @@ def start(c): #type: ignore[no-any-unimported]
 
 
 @task(pre=[start])
-def create(c): #type: ignore[no-any-unimported]
+def create(c):  #type: ignore[no-any-unimported]
     # type: (Context) -> None
     """
     Create the database in the docker container
@@ -108,7 +108,7 @@ def create(c): #type: ignore[no-any-unimported]
 
 
 @task()
-def check(c): #type: ignore[no-any-unimported]
+def check(c):  #type: ignore[no-any-unimported]
     # type: (Context) -> None
     """
     Check that you can connect to the database in the docker container
@@ -121,7 +121,7 @@ def check(c): #type: ignore[no-any-unimported]
 
 
 @task()
-def destroy(c): #type: ignore[no-any-unimported]
+def destroy(c):  #type: ignore[no-any-unimported]
     # type: (Context) -> None
     """
     Destroy the database and the docker container

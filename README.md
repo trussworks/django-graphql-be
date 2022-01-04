@@ -12,8 +12,8 @@ We use `asdf` to manage our tool versions. Currently, `asdf` manages:
 * [direnv](https://github.com/asdf-community/asdf-direnv)
 * [Poetry](https://github.com/asdf-community/asdf-poetry)
 
-Install `asdf` using [the instructions in their official documentation](https://asdf-vm.com/guide/getting-started.html#getting-started). 
-This will involve a step to modify your shell profile file--make sure you do this to complete the installation. 
+Install `asdf` using [the instructions in their official documentation](https://asdf-vm.com/guide/getting-started.html#getting-started).
+This will involve a step to modify your shell profile file -- make sure you do this to complete the installation.
 If you are unsure which of the instructions apply to you, reach out to the team and we'll help you figure it out.
 
 You will also need to add the following plug-ins:
@@ -30,12 +30,13 @@ Finally, `cd` into the repository folder and run:
 asdf install
 ```
 
-This will install the versions we have dictated in the `.tool-versions` file. Your shell may prompt you to run 
-additional commands to activate the newly installed tools. You may also need to restart your shell.
+This will install the versions we have dictated in the `.tool-versions` file.
+
+Your shell may prompt you to run additional commands to activate the newly installed tools. You may also need to restart your shell.
 
 #### `direnv` additional steps
 
-Direnv must also be added to your shell profile file (`.bashrc`, `.zshrc`, etc) to work properly. Follow [the official instructions](https://github.com/direnv/direnv/blob/master/docs/hook.md) 
+Direnv must also be added to your shell profile file (`.bashrc`, `.zshrc`, etc) to work properly. Follow [the official instructions](https://github.com/direnv/direnv/blob/master/docs/hook.md)
 for whichever shell you use, and then change `direnv` to `asdf exec direnv`. If you use `zsh`, this will look like:
 
 ```shell
@@ -47,7 +48,7 @@ Once you have finished updating your shell's profile file, run `direnv allow` to
 
 ### Install Python packages
 
-This project is compatible with Python 3.9. We currently use `asdf` to manage our tool versions, and [Poetry](https://python-poetry.org/) 
+This project is compatible with Python 3.9. We currently use `asdf` to manage our tool versions, and [Poetry](https://python-poetry.org/)
 to manage our Python virtual environment.
 
 First, make sure you install all the Python packages/dependencies with:
@@ -56,17 +57,17 @@ First, make sure you install all the Python packages/dependencies with:
 poetry install
 ```
 
-The virtual environment for Poetry is created automatically when you install the dependencies. It is not, however, 
-activated automatically when you enter the repo. 
+The virtual environment for Poetry is created automatically when you install the dependencies. It is not, however,
+activated automatically when you enter the repo.
 
 There are two ways to interact with the virtual environment:
 
-1. Use `poetry run <command>` to run commands within the virtual environment. For example, `poetry run inv -l` will list 
+1. Use `poetry run <command>` to run commands within the virtual environment. For example, `poetry run inv -l` will list
 all of our invoke commands.
-2. Use `poetry shell` to start a shell within the virtual environment. This is closest to the usual virtual environment 
+2. Use `poetry shell` to start a shell within the virtual environment. This is closest to the usual virtual environment
 experience. Use `poetry exit` or `deactivate` when you are done.
 
-If you would like to configure your IDE interpreter to point at this virutal environment, use `poetry env info --path` 
+If you would like to configure your IDE interpreter to point at this virutal environment, use `poetry env info --path`
 to get its path.
 
 For more information about using Poetry, refer to their [official documentation](https://python-poetry.org/).
@@ -138,4 +139,54 @@ You should see no errors.
 ```sh
 Success: no issues found in 3 source files
 Success: no issues found in 14 source files
+```
+
+## Troubleshooting
+
+### Asdf: BUILD FAILED installing python
+
+**Issue:** Asdf fails to install a new python version
+
+You may see an error like this...
+
+```sh
+>  asdf install python 3.9.1
+...
+python-build 3.9.1 /Users/shimona/.asdf/installs/python/3.9.1
+python-build: use openssl@1.1 from homebrew
+python-build: use readline from homebrew
+Downloading Python-3.9.1.tar.xz...
+-> https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tar.xz
+Installing Python-3.9.1...
+python-build: use tcl-tk from homebrew
+python-build: use readline from homebrew
+
+BUILD FAILED (OS X 12.0.1 using python-build 2.2.2-14-g381002db)
+
+Inspect or clean up the working tree at /var/folders/tl/9m081bjx6sgb8s0zst8qyz280000gn/T/python-build.20211221173254.4843
+Results logged to /var/folders/tl/9m081bjx6sgb8s0zst8qyz280000gn/T/python-build.20211221173254.4843.log
+```
+
+**Fix:** The issue is often with an incompatible build tool installed in xcode.
+Try
+
+```sh
+>  xcode-select --install
+```
+
+Or, if that doesn't work, install the latest version of xcode commandline tools (12.5.1) from here
+<https://developer.apple.com/download/all/?q=command%20line%20tools> (edited)
+
+### Poetry install can't find postgres
+
+**Issue:** If you used asdf for postgres, sometimes poetry is unable to find the right version.
+
+```text
+asdf: No version set for command pg_config
+```
+
+**Fix:** Setting the global version of asdf works although it's not an ideal fix.
+
+```text
+> asdf global postgres 12.7
 ```

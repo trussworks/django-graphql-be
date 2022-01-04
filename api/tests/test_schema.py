@@ -15,8 +15,7 @@ def test_all_cases(  # type: ignore[no-any-unimported]
     # Load test data into the database:
     call_command('loaddata', f'{API_TESTS_DATA_DIR}test_data.json')
 
-    response: HttpResponse = client_query(
-        '''
+    response: HttpResponse = client_query('''
         query {
           allCases {
             id
@@ -34,11 +33,9 @@ def test_all_cases(  # type: ignore[no-any-unimported]
             receivedAt
           }
         }
-        '''
-    )
+        ''')
     assert response.status_code == 200, f"The response failed with a {response.status_code} status code."
 
     content: dict = json.loads(response.content)
     # This line makes a snapshot the first time, then compares against the snapshot
     snapshot.assert_match(content)
-

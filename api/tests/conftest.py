@@ -24,6 +24,7 @@ ClientQueryType = Callable[[ClientQueryParams], HttpResponse]
 @pytest.fixture
 def client_query(client: Client) -> ClientQueryType:
     """Use the Django `client` fixture with graphql_query"""
+
     def func(*args: ClientQueryParams, **kwargs: ClientQueryParams) -> HttpResponse:
         return cast(HttpResponse, graphql_query(*args, **kwargs, client=client))
 

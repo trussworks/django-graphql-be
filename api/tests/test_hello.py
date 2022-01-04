@@ -11,13 +11,11 @@ class TestHello:
     def test_hello(  # type: ignore[no-any-unimported]
             self, client_query: ClientQueryType, snapshot: PyTestSnapshotTest) -> None:
         """Test the hello query in the GraphQL schema/API definition"""
-        response: HttpResponse = client_query(
-            '''
+        response: HttpResponse = client_query('''
             query {
                 hello
             }
-            '''
-        )
+            ''')
         assert response.status_code == 200, f"The response failed with a {response.status_code} status code."
 
         content: dict = json.loads(response.content)

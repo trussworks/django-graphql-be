@@ -118,9 +118,7 @@ USE_L10N = True
 USE_TZ = True
 
 # GraphQL and CORS settings
-GRAPHENE = {
-    "SCHEMA": "api.schema.schema"
-}
+GRAPHENE = {"SCHEMA": "api.schema.schema"}
 CORS_ORIGIN_REGEX_WHITELIST = r'^http:\/\/localhost:(....)'
 
 # Debug utilities/loggers
