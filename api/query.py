@@ -7,8 +7,8 @@ import graphene
 from django.db.models import QuerySet
 
 
-class DjangoQueryMixin:
-    """Add query optimization to `graphene_django.DjangoObjectType` class using the Django base ORM"""
+class GrapheneQueryMixin:
+    """Add query optimization to `django.db.models.Model` class using the GraphQL resolver and Django base ORM"""
 
     select_fields: tuple[str, ...] = ()  # field arguments for a `select_related()` method call
     prefetch_fields: tuple[str, ...] = ()  # field arguments for a `prefetch_related()` method call
@@ -23,9 +23,7 @@ class DjangoQueryMixin:
             A QuerySet that has been optimized but not resolved. Must be called with `.all()` or `.filter(...)` once
             returned.
         """
-        # `cls._meta.model` is defined within the metaclass for `graphene_django.DjangoObjectType`,
-        # and this mixin MUST be used with the DjangoObjectType class
-        query = cls._meta.model.objects  # type: ignore[attr-defined]
+        query = cls.objects  # `cls` here IS the model type
 
         # `info.field_asts[0]` is our API query name.
         # We need this to know that a query has even been requested - without it, we would have no idea what the client
