@@ -23,7 +23,8 @@ class GrapheneQueryMixin:
             A QuerySet that has been optimized but not resolved. Must be called with `.all()` or `.filter(...)` once
             returned.
         """
-        query = cls.objects  # `cls` here IS the model type
+        # `cls` here IS the model type, so this is the typical `Model.objects` syntax.
+        query = cls.objects  # type: ignore[attr-defined]
 
         # `info.field_asts[0]` is our API query name.
         # We need this to know that a query has even been requested - without it, we would have no idea what the client
