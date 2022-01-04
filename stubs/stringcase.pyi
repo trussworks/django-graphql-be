@@ -1,3 +1,3 @@
-"""Stubs for the stringcase module - which will conveniently be mostly strings."""
+"""Stubs for the stringcase module - which will conveniently be mostly strings"""
 
 def snakecase(string: str) -> str: ...
