@@ -9,13 +9,11 @@ from .models import Person, Case
 
 
 class PersonType(DjangoObjectType):  # type: ignore[no-any-unimported]
-
     class Meta:
         model = Person
 
 
 class CaseType(DjangoObjectType):  # type: ignore[no-any-unimported]
-
     class Meta:
         model = Case
 
@@ -26,7 +24,7 @@ class Query(graphene.ObjectType):
 
     @staticmethod
     def resolve_all_cases(root: Optional[type], info: graphene.ResolveInfo) -> QuerySet:
-        return Case.objects.select_related("subject", "analyst").all()
+        return Case.objects.all()
 
 
 schema = graphene.Schema(query=Query)
