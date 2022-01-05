@@ -1,11 +1,12 @@
 """Tests for optimizing GraphQL queries"""
 from typing import cast
 
+import pytest
 from graphql.language import parser, ast, source
 from graphene import ResolveInfo
 from snapshottest.pytest import PyTestSnapshotTest
 
-from api.query import GrapheneQueryMixin
+from api.query import GrapheneQueryMixin, ImplementationError
 from api.models import Case
 
 
@@ -169,3 +170,19 @@ class TestGrapheneQueryMixinSQL:
         ''')
         query = Case.build_optimized_query(mock_complex_cases_query).all().query
         snapshot.assert_match(str(query))
+
+    def test_build_optimized_query__implementation_error(self):
+        """
+        Although `_find_query_args` works without being subclassed with a Django Model,
+        `build_optimized_query` should fail.
+        """
+        class NonSubclasssedModel(GrapheneQueryMixin):
+            """This class was not subclassed with a Model, and thus should fail"""
+
+        mock_resolve_info = self.mock_resolve_info('''
+          allCases {
+            id
+          }
+        ''')
+        with pytest.raises(ImplementationError):
+            _ = NonSubclasssedModel.build_optimized_query(mock_resolve_info)

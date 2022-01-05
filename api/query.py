@@ -7,6 +7,10 @@ import graphene
 from django.db.models import QuerySet
 
 
+class ImplementationError(Exception):
+    """Indicates that code may have been implemented improperly by the dev"""
+
+
 class GrapheneQueryMixin:
     """Add query optimization to `django.db.models.Model` class using the GraphQL resolver and Django base ORM"""
 
@@ -23,8 +27,11 @@ class GrapheneQueryMixin:
             A QuerySet that has been optimized but not resolved. Must be called with `.all()` or `.filter(...)` once
             returned.
         """
-        # `cls` here IS the model type, so this is the typical `Model.objects` syntax.
-        query = cls.objects  # type: ignore[attr-defined]
+        try:
+            # `cls` here IS the model type, so this is the typical `Model.objects` syntax.
+            query = cls.objects  # type: ignore[attr-defined]
+        except AttributeError:
+            raise ImplementationError("GrapheneQueryMixin must be subclassed with `django.db.models.Model`")
 
         # `info.field_asts[0]` is our API query name.
         # We need this to know that a query has even been requested - without it, we would have no idea what the client
