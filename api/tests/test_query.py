@@ -61,7 +61,7 @@ class TestGrapheneQueryMixinArgs:
         class EmptyFields(GrapheneQueryMixin):
             """This model has not defined select or prefetch args"""
 
-        select_args, prefetch_args = EmptyFields._find_query_args(self.default_selections(), "")
+        select_args, prefetch_args = EmptyFields._find_query_args(self.default_selections())
         assert select_args == []
         assert prefetch_args == []
 
@@ -76,7 +76,7 @@ class TestGrapheneQueryMixinArgs:
             select_fields = ("analyst", )
             prefetch_fields = ("subject__cases", )
 
-        select_args, prefetch_args = SelectedFields._find_query_args(self.default_selections(), "")
+        select_args, prefetch_args = SelectedFields._find_query_args(self.default_selections())
         assert select_args == ["analyst"]
         assert prefetch_args == ["subject__cases"]
 
@@ -91,7 +91,7 @@ class TestGrapheneQueryMixinArgs:
             select_fields = ("color", "weight")
             prefetch_fields = ("weight__units", )
 
-        select_args, prefetch_args = NonSelectedFields._find_query_args(self.default_selections(), "")
+        select_args, prefetch_args = NonSelectedFields._find_query_args(self.default_selections())
         assert select_args == []
         assert prefetch_args == []
 
@@ -102,7 +102,7 @@ class TestGrapheneQueryMixinArgs:
 
             prefetch_fields = ("cases", "subject__cases", "subject__cases_assigned")
 
-        select_args, prefetch_args = OnlyPrefetchFields._find_query_args(self.default_selections(), "")
+        select_args, prefetch_args = OnlyPrefetchFields._find_query_args(self.default_selections())
         assert select_args == []
         assert prefetch_args == ["subject__cases"]  # neither `cases` nor `subject__cases_assigned` were selected
 
@@ -171,7 +171,7 @@ class TestGrapheneQueryMixinSQL:
         query = Case.build_optimized_query(mock_complex_cases_query).all().query
         snapshot.assert_match(str(query))
 
-    def test_build_optimized_query__implementation_error(self):
+    def test_build_optimized_query__implementation_error(self) -> None:
         """
         Although `_find_query_args` works without being subclassed with a Django Model,
         `build_optimized_query` should fail.
