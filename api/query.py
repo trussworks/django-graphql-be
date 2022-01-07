@@ -36,7 +36,7 @@ class GrapheneQueryMixin:
         # `info.field_asts[0]` is our API query name.
         # We need this to know that a query has even been requested - without it, we would have no idea what the client
         # wants from us.
-        # We will let the IndexError/AttributeError raise if it doesn't exist because that would be extremely peculiar.
+        # We will let the IndexError/TypeError raise if it doesn't exist because that would be extremely peculiar.
         select_args, prefetch_args = \
             cls._find_query_args(cast(SelectionSet, info.field_asts[0].selection_set).selections)
 
