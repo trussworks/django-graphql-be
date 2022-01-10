@@ -6,7 +6,6 @@ from os import path
 from typing import Callable, Union, cast
 
 import pytest
-from _pytest.fixtures import FixtureRequest
 from django.test.client import Client
 from django.http import HttpResponse
 from snapshottest.pytest import PyTestSnapshotTest
@@ -24,7 +23,6 @@ ClientQueryType = Callable[[ClientQueryParams], HttpResponse]
 @pytest.fixture
 def client_query(client: Client) -> ClientQueryType:
     """Use the Django `client` fixture with graphql_query"""
-
     def func(*args: ClientQueryParams, **kwargs: ClientQueryParams) -> HttpResponse:
         return cast(HttpResponse, graphql_query(*args, **kwargs, client=client))
 
@@ -32,7 +30,7 @@ def client_query(client: Client) -> ClientQueryType:
 
 
 @pytest.fixture(scope="class")
-def snapshot_pytest(request: FixtureRequest) -> None:
+def snapshot_pytest(request: pytest.FixtureRequest) -> None:
     """
     Wrap snapshot fixture to provide instance snapshot property for unittest.TestCase tests.
     `request` is a pytest fixture containing information about the test command:
