@@ -6,7 +6,6 @@ from os import path
 from typing import Union, Protocol
 
 import pytest
-from _pytest.fixtures import FixtureRequest
 from django.test.client import Client
 from django.http import HttpResponse
 from snapshottest.pytest import PyTestSnapshotTest
@@ -35,7 +34,7 @@ def client_query(client: Client) -> ClientQueryType:
 
 
 @pytest.fixture(scope="class")
-def snapshot_pytest(request: FixtureRequest) -> None:
+def snapshot_pytest(request: pytest.FixtureRequest) -> None:
     """
     Wrap snapshot fixture to provide instance snapshot property for unittest.TestCase tests.
     `request` is a pytest fixture containing information about the test command:
