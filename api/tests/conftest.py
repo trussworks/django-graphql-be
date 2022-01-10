@@ -3,7 +3,7 @@ Define data and other config elements for tests.
 `conftest.py` is a pytest standard file.
 """
 from os import path
-from typing import Callable, Union, cast
+from typing import Callable, Union, Protocol, Generator, cast
 
 import pytest
 from django.test.client import Client
@@ -15,16 +15,20 @@ from graphene_django.utils.testing import graphql_query
 API_TESTS_DIR: str = path.dirname(__file__)
 API_TESTS_DATA_DIR: str = path.join(API_TESTS_DIR, 'data/')
 
-PopulateDbType = Callable[[str], None]
-
 # typing.ParamSpec would be a compelling alternative to Union here (and TypeVar elsewhere),
 # but it is only available in Python >=3.10
 ClientQueryParams = Union[str, dict]
 ClientQueryType = Callable[[ClientQueryParams], HttpResponse]
 
 
+class PopulateDbType(Protocol):
+    """Callable type that, given an optional string scenario, loads a fixture to the test db"""
+    def __call__(self, scenario: str = ...) -> None:
+        ...
+
+
 @pytest.fixture
-def populate_db(db: None) -> PopulateDbType:
+def populate_db(db: None) -> Generator[PopulateDbType, None, None]:
     """
     Populate the DB with the data for a specific scenario/fixture.
     Can be used along with `@pytest.mark.django_db` to specify transaction settings and more

@@ -12,7 +12,7 @@ def test_all_cases(  # type: ignore[no-any-unimported]
     """Test the resolver for returning all cases from DB"""
 
     # Load default test data into the database:
-    populate_db(f"test_data")
+    populate_db()
 
     response: HttpResponse = client_query('''
         query {
