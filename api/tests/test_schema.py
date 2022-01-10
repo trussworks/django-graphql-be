@@ -2,17 +2,16 @@
 import json
 
 from django.http import HttpResponse
-from django.core.management import call_command
 from snapshottest.pytest import PyTestSnapshotTest
 
-from .conftest import ClientQueryType, API_TESTS_DATA_DIR
+from .conftest import PopulateDbType, ClientQueryType
 
 
-def test_all_cases(db: None, client_query: ClientQueryType, snapshot: PyTestSnapshotTest) -> None:
+def test_all_cases(populate_db: PopulateDbType, client_query: ClientQueryType, snapshot: PyTestSnapshotTest) -> None:
     """Test the resolver for returning all cases from DB"""
 
-    # Load test data into the database:
-    call_command('loaddata', f'{API_TESTS_DATA_DIR}test_data.json')
+    # Load default test data into the database:
+    populate_db(f"test_data")
 
     response: HttpResponse = client_query('''
         query {
