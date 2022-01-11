@@ -4,7 +4,12 @@ from types import ModuleType
 
 
 class Collection:
-    def add_collection(self, coll: Union[Collection, ModuleType], name: Optional[str] = None, default: Optional[bool] = None) -> None:
+    def add_collection(
+            self,
+            coll: Union[Collection, ModuleType],
+            name: Optional[str] = None,
+            default: Optional[bool] = None
+    ) -> None:
         ...
 
 class Result:
