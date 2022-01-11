@@ -1,5 +1,5 @@
 """Stubs for the invoke module - https://docs.pyinvoke.org/en/stable/index.html"""
-from typing import Union, Callable, Optional, mod
+from typing import Union, Callable, Optional
 from types import ModuleType
 
 
@@ -29,4 +29,10 @@ class Context:
 
 def task(*args: Union[Callable, list[Callable]], **kwargs: Union[bool, dict[str, str], list[Callable]]) -> Callable:
     """
+    :*args:
+        Can be the decorated function (when no parens, e.g. `@task`) or a list of prerequisite functions
+        (`@task(prereqA, prereqB)`)
+    :**kwargs:
+        Can be a boolean, a dict of strings (for help text), or a list of functions (prereqs or post-reqs).
+        More types discovered and used later should be added to this Union.
     """
