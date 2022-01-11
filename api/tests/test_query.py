@@ -6,7 +6,7 @@ import sqlparse
 from graphql.language import parser, ast, source
 from graphene import ResolveInfo
 from snapshottest.pytest import PyTestSnapshotTest
-from django.db.models import QuerySet
+from django.db.models import sql
 
 from api.query import GrapheneQueryMixin, ImplementationError
 from api.models import Case
@@ -137,7 +137,7 @@ class TestGrapheneQueryMixinSQL:
         return cast(ResolveInfo, MockResolveInfo())
 
     @staticmethod
-    def pretty_print_sql(query: QuerySet) -> str:
+    def pretty_print_sql(query: sql.Query) -> str:
         """Parse a QuerySet into a string of well-formatted SQL"""
         return sqlparse.format(str(query), reindent=True, keyword_case='upper')
 
