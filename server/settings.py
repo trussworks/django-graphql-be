@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import List
 import logging
 import json
+from . import log
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -165,6 +166,9 @@ LOGGING = {
             'format': '{levelname} {message}',
             'style': '{',
         },
+        'json': {
+            '()': log.JsonFormatter,
+        }
     },
     'handlers': {
         'console': {
@@ -173,7 +177,7 @@ LOGGING = {
         },
         'cloudwatch': {
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
+            'formatter': 'json'
         }
     },
     'root': {
@@ -182,7 +186,7 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'cloudwatch'],
+            'handlers': ['cloudwatch'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
             'propagate': False,
         },
