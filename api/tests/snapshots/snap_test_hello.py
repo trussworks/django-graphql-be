@@ -4,11 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
-snapshots['TestHello.test_hello 1'] = {
-    'data': {
-        'hello': 'Hello World!'
-    }
-}
+snapshots['TestHello.test_hello 1'] = {'data': {'hello': 'Hello World!'}}
