@@ -9,7 +9,7 @@ class Collection:
             coll: Union[Collection, ModuleType],
             name: Optional[str] = None,
             default: Optional[bool] = None
-    ) -> None:
+        ) -> None:
         ...
 
 class Result:

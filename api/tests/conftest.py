@@ -3,7 +3,7 @@ Define fixtures and other config elements for tests.
 `conftest.py` is a pytest standard file.
 """
 from os import path
-from typing import Callable, Union, cast
+from typing import Union, Protocol
 
 import pytest
 from _pytest.fixtures import FixtureRequest
@@ -17,16 +17,19 @@ API_TESTS_DATA_DIR: str = path.join(API_TESTS_DIR, 'data/')
 
 # typing.ParamSpec would be a compelling alternative to Union here (and TypeVar elsewhere),
 # but it is only available in Python >=3.10
-ClientQueryParams = Union[str, dict]
-ClientQueryType = Callable[[ClientQueryParams], HttpResponse]
+ClientQueryParams = Union[str, dict, Client]
+
+
+class ClientQueryType(Protocol):
+    def __call__(self, query: str, **kwargs: ClientQueryParams) -> HttpResponse:
+        ...
 
 
 @pytest.fixture
 def client_query(client: Client) -> ClientQueryType:
     """Use the Django `client` fixture with graphql_query"""
-
-    def func(*args: ClientQueryParams, **kwargs: ClientQueryParams) -> HttpResponse:
-        return cast(HttpResponse, graphql_query(*args, **kwargs, client=client))
+    def func(query: str, **kwargs: ClientQueryParams) -> HttpResponse:
+        return graphql_query(query, **kwargs, client=client)
 
     return func
 
