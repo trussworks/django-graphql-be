@@ -6,7 +6,6 @@ from invoke import task, UnexpectedExit, Context
 
 
 class Database:
-
     def __init__(self, container: str, name: str, password: str, port: int, docker_port: int) -> None:
         self.container = container
         self.name = name
@@ -16,21 +15,25 @@ class Database:
         self.image = 'postgres:12.7'
         self.psql_cmd = '/usr/local/bin/psql --variable "ON_ERROR_STOP=1"'
 
-    def conninfo(self, db: str = '') -> str:
+    def conninfo(self, db_name: str = '') -> str:
         """
         Returns a connection info string to use with psql command.
         Defaults to no specific db, select db if needed
         """
-        return f"postgres://postgres:{self.password}@localhost:{self.port}/{db}"
+        return f"postgres://postgres:{self.password}@localhost:{self.port}/{db_name}"
 
-    def check(self, c: Context, db: str = '', retry: int = 3, sleep: int = 1) -> None:  #type: ignore[no-any-unimported]
+    def check(self,
+              c: Context,
+              db_name: str = '',
+              retry: int = 3,
+              sleep: int = 1) -> None:  #type: ignore[no-any-unimported]
         """
         Attempt to connect to the postgres instance.
         """
 
         for i in range(retry):
             try:
-                c.run(f"{self.psql_cmd} {self.conninfo()} -c 'SELECT 1;'", hide=True)
+                c.run(f"{self.psql_cmd} {self.conninfo(db_name)} -c 'SELECT 1;'", hide=True)
             except UnexpectedExit:
                 print("Could not connect to db, retrying...")
                 time.sleep(sleep)
@@ -78,7 +81,7 @@ def start(c):  #type: ignore[no-any-unimported]
     except UnexpectedExit:
 
         print("Unable to start container, create a new database container")
-        result = c.run(
+        c.run(
             f"docker run -d --name {db.container} -e POSTGRES_PASSWORD={db.password} -p {db.port}:{db.docker_port} {db.image}"
         )
 
@@ -115,7 +118,7 @@ def check(c):  #type: ignore[no-any-unimported]
     """
     print(f"Connecting to {db.name}")
     try:
-        db.check(c, db=db.name)
+        db.check(c, db_name=db.name)
     except UnexpectedExit as e:
         print(f"Error executing: {e.result.command}")
 
