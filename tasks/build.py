@@ -1,10 +1,10 @@
 """Tasks to build and test the server"""
-from invoke import Context, task, exceptions
+from invoke import Context, task, Failure
 
 
 @task
-def mypy(c):  # type: ignore[no-any-unimported]
-    # type: (Context) -> None  # ignores Context type
+def mypy(c):
+    # type: (Context) -> None
     """
     Runs the mypy type check on all python folders
     """
@@ -12,13 +12,13 @@ def mypy(c):  # type: ignore[no-any-unimported]
         print(f"Checking {mypy_dir}...")
         try:
             c.run(f'mypy {mypy_dir}')
-        except exceptions.Failure:
+        except Failure:
             print(f"Errors found in {mypy_dir}.\n")
 
 
 @task(help={"snapshot_update": "Updates testing snapshots if needed"})
-def test(c, snapshot_update=False):  # type: ignore[no-any-unimported]
-    # type: (Context, bool) -> None  # ignores Context type
+def test(c, snapshot_update=False):
+    # type: (Context, bool) -> None
     """
     Runs all tests available on the server
     """
@@ -29,8 +29,8 @@ def test(c, snapshot_update=False):  # type: ignore[no-any-unimported]
 
 
 @task
-def format_code(c):  # type: ignore[no-any-unimported]
-    # type: (Context) -> None  # ignores Context type
+def format_code(c):
+    # type: (Context) -> None
     """
     Formats the code using yapf
     """
@@ -40,8 +40,8 @@ def format_code(c):  # type: ignore[no-any-unimported]
 
 
 @task(pre=[mypy, format_code])
-def tidy(c):  # type: ignore[no-any-unimported]
-    # type: (Context) -> None  # ignores Context type
+def tidy(c):
+    # type: (Context) -> None
     """
     Runs all formatters, linters and static code analysis
     Most are run as prerequisites.
