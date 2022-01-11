@@ -11,7 +11,7 @@ def mypy(c):
     for mypy_dir in ['tasks', 'server', 'api']:
         print(f"Checking {mypy_dir}...")
         try:
-            c.run(f'mypy {mypy_dir}')
+            c.run(f'mypy stubs {mypy_dir}')
         except Failure:
             print(f"Errors found in {mypy_dir}.\n")
 
