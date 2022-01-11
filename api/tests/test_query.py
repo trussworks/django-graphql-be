@@ -134,7 +134,7 @@ class TestGrapheneQueryMixinSQL:
 
         return cast(ResolveInfo, MockResolveInfo())
 
-    def test_case_query_simple(self, snapshot: PyTestSnapshotTest) -> None:  # type: ignore[no-any-unimported]
+    def test_case_query_simple(self, snapshot: PyTestSnapshotTest) -> None:
         """Test that a simple request results in a simple query"""
         mock_simple_cases_query = self.mock_resolve_info('''
           allCases {
@@ -147,7 +147,7 @@ class TestGrapheneQueryMixinSQL:
         query = Case.build_optimized_query(mock_simple_cases_query).all().query
         snapshot.assert_match(str(query))
 
-    def test_case_query_complex(self, snapshot: PyTestSnapshotTest) -> None:  # type: ignore[no-any-unimported]
+    def test_case_query_complex(self, snapshot: PyTestSnapshotTest) -> None:
         """Test that a complex request adds expected complexity to the query"""
         mock_complex_cases_query = self.mock_resolve_info('''
           allCases {
