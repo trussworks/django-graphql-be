@@ -1,13 +1,8 @@
 from datetime import datetime
 import json
 import logging
-import traceback
-import sys
 import os
-
-APP_NAME = 'hello world json logging'
-APP_VERSION = 'git rev-parse HEAD'
-LOG_LEVEL = logging._nameToLevel['INFO']
+from typing import Dict
 
 
 class JsonFormatter(logging.Formatter):
@@ -17,24 +12,31 @@ class JsonFormatter(logging.Formatter):
         :param record: logging.LogRecord object
         :return: JSON string
         """
-
+        # Create a structured dict for our logging
         payload = self.make_dict(record)
+
         # If an exception happened, add the stack trace
         if hasattr(record, 'exc_info') and record.exc_info:
             payload['stack_trace'] = self.formatException(record.exc_info)
 
-        # Return the json string
+        # Convert the dict to a json string
         json_string = json.dumps(payload)
         message = record.getMessage()
+        # Attach the JSON string to our formatted message
         return f"{record.levelname} {message} {json_string}"
 
     @staticmethod
     def make_dict(record: logging.LogRecord) -> dict:
+        # Get the interpolated message
         message_str = record.getMessage()
+
+        # Capture the user values passed in
         if isinstance(record.args, dict):
             user_payload = record.args
         else:
             user_payload = {'value': repr(record.args)}
+
+        # Return a structured dict including these values
         return {
             'payload': user_payload,
             'version': '0.0.1',  # Schema version
@@ -45,60 +47,43 @@ class JsonFormatter(logging.Formatter):
         }
 
 
-class JsonEncoderStrFallback(json.JSONEncoder):
-    def default(self, obj):
-        try:
-            return super().default(obj)
-        except TypeError as exc:
-            if 'not JSON serializable' in str(exc):
-                return str(obj)
-            raise
+# Create a DictConfig for logging
+# https://docs.python.org/3/library/logging.config.html#logging-config-dictschema
+Config: Dict = {
+    'version': 1,
+    'disable_existing_loggers': False,
 
-
-class JsonEncoderDatetime(JsonEncoderStrFallback):
-    def default(self, obj):
-        if isinstance(obj, datetime):
-            return obj.strftime('%Y-%m-%dT%H:%M:%S%z')
-        else:
-            return super().default(obj)
-
-
-logging.basicConfig(
-    format='%(json_formatted)s',
-    level=LOG_LEVEL,
-    handlers=[
-        # if you wish to also log to a file -- logging.FileHandler(log_file_path, 'a'),
-        logging.StreamHandler(sys.stdout),
-    ],
-)
-
-_record_factory_bak = logging.getLogRecordFactory()
-
-
-def record_factory(*args, **kwargs) -> logging.LogRecord:
-    record = _record_factory_bak(*args, **kwargs)
-
-    record.json_formatted = json.dumps(
-        {
-            'level': record.levelname,
-            'unixtime': record.created,
-            'thread': record.thread,
-            'location': '{}:{}:{}'.format(
-                record.pathname or record.filename,
-                record.funcName,
-                record.lineno,
-            ),
-            'exception': record.exc_info,
-            'traceback': traceback.format_exception(*record.exc_info) if record.exc_info else None,
-            'app': {
-                'name': APP_NAME,
-                'releaseId': APP_VERSION,
-                'message': record.getMessage(),
-            },
+    # Formatters define what how the log is FORMATTED
+    'formatters': {
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
         },
-        cls=JsonEncoderDatetime,
-    )
-    return record
+        'json': {
+            '()': JsonFormatter,
+        }
+    },
 
+    # Handlers define WHERE the log goes and which formatter to use
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': os.getenv('DJANGO_LOG_FORMAT', 'simple')
+        },
+    },
 
-logging.setLogRecordFactory(record_factory)
+    # Loggers collect the messages and route them to handlers
+    'root': {
+        # root logger → console handler → json formatter
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            # django logger → console handler → json formatter
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+    },
+}
