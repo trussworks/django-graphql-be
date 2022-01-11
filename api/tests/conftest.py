@@ -1,5 +1,5 @@
 """
-Define data and other config elements for tests.
+Define fixtures and other config elements for tests.
 `conftest.py` is a pytest standard file.
 """
 from os import path
@@ -12,8 +12,7 @@ from django.core.management import call_command
 from snapshottest.pytest import PyTestSnapshotTest
 from graphene_django.utils.testing import graphql_query
 
-API_TESTS_DIR: str = path.dirname(__file__)
-API_TESTS_DATA_DIR: str = path.join(API_TESTS_DIR, 'data/')
+API_FIXTURES_DIR: str = path.join(path.dirname(__file__), '../fixtures/')
 
 # typing.ParamSpec would be a compelling alternative to Union here (and TypeVar elsewhere),
 # but it is only available in Python >=3.10
@@ -41,7 +40,7 @@ def populate_db(db: None) -> Generator[PopulateDbType, None, None]:
         A callable that can be used to specify which fixture gets loaded for the test. Useful for testing scenarios.
     """
     def load_fixture(scenario: str = "default") -> None:
-        call_command("loaddata", f"{API_TESTS_DATA_DIR}{scenario}.json")
+        call_command("loaddata", path.join(API_FIXTURES_DIR, f"{scenario}.json"))
 
     yield load_fixture
 
