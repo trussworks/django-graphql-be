@@ -39,8 +39,7 @@ def test_all_cases(populate_db: PopulateDbType, client_query: ClientQueryType, s
     snapshot.assert_match(content)
 
 
-def test_all_people(  # type: ignore[no-any-unimported]
-        populate_db: PopulateDbType, client_query: ClientQueryType, snapshot: PyTestSnapshotTest) -> None:
+def test_all_people(populate_db: PopulateDbType, client_query: ClientQueryType, snapshot: PyTestSnapshotTest) -> None:
     """Test the resolver for returning all people (Person data) from DB"""
 
     # Load default test data into the database:
