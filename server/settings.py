@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 from typing import List
+import logging
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -128,3 +130,61 @@ if DEBUG:
         'graphiql_debug_toolbar',
     ])
     MIDDLEWARE.insert(1, 'graphiql_debug_toolbar.middleware.DebugToolbarMiddleware')
+
+# Store the original record factory
+_record_factory_bak = logging.getLogRecordFactory()
+
+
+# Define a custom one
+def record_factory(*args, **kwargs) -> logging.LogRecord:
+    # Get the record from original record factory
+    record = _record_factory_bak(*args, **kwargs)
+
+    record.json_formatted = json.dumps({
+        'level': record.levelname,
+        'unixtime': record.created,
+        'thread': record.thread,
+        'something': 'a string',
+        'message': record.getMessage(),
+    })
+    return record
+
+
+logging.setLogRecordFactory(record_factory)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            # a format that includes the json string
+            'format': '%{json_formatted}s',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'cloudwatch': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'cloudwatch'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+    },
+}
