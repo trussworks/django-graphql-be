@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import List
 import logging
 import json
-from . import log
+from .logging import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -131,6 +131,3 @@ if DEBUG:
         'graphiql_debug_toolbar',
     ])
     MIDDLEWARE.insert(1, 'graphiql_debug_toolbar.middleware.DebugToolbarMiddleware')
-
-# Setup the log configuration
-LOGGING = log.Config

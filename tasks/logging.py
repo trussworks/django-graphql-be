@@ -1,7 +1,8 @@
-from datetime import datetime
 import json
 import logging
+import logging.config
 import os
+from datetime import datetime
 from typing import Dict
 
 
@@ -26,7 +27,7 @@ class JsonFormatter(logging.Formatter):
         return f"{record.levelname} {message} {json_string}"
 
     @staticmethod
-    def make_dict(record: logging.LogRecord) -> dict:
+    def make_dict(record: logging.LogRecord) -> Dict:
         # Get the interpolated message
         message_str = record.getMessage()
 
@@ -49,7 +50,7 @@ class JsonFormatter(logging.Formatter):
 
 # Create a DictConfig for logging
 # https://docs.python.org/3/library/logging.config.html#logging-config-dictschema
-Config: Dict = {
+LOGGING: Dict = {
     'version': 1,
     'disable_existing_loggers': False,
 
@@ -68,7 +69,7 @@ Config: Dict = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': os.getenv('DJANGO_LOG_FORMAT', 'simple')
+            'formatter': os.getenv('LOG_FORMAT', 'simple')
         },
     },
 
@@ -76,14 +77,6 @@ Config: Dict = {
     'root': {
         # root logger → console handler → json formatter
         'handlers': ['console'],
-        'level': 'WARNING',
-    },
-    'loggers': {
-        'django': {
-            # django logger → console handler → json formatter
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-            'propagate': False,
-        },
+        'level': os.getenv('LOG_LEVEL', 'INFO'),
     },
 }
