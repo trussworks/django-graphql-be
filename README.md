@@ -1,6 +1,6 @@
-# SITH Backend
+# Django GraphQL Backend
 
-The SITH backend is a django-based backend for the System for Insider Threat Hindrance (SITH) project
+This project has an associated frontend that can be found here: [https://github.com/trussworks/next-graphql-fe](https://github.com/trussworks/next-graphql-fe)
 
 ## Usage
 
@@ -8,9 +8,9 @@ The SITH backend is a django-based backend for the System for Insider Threat Hin
 
 We use `asdf` to manage our tool versions. Currently, `asdf` manages:
 
-* [Python](https://github.com/danhper/asdf-python)
-* [direnv](https://github.com/asdf-community/asdf-direnv)
-* [Poetry](https://github.com/asdf-community/asdf-poetry)
+- [Python](https://github.com/danhper/asdf-python)
+- [direnv](https://github.com/asdf-community/asdf-direnv)
+- [Poetry](https://github.com/asdf-community/asdf-poetry)
 
 Install `asdf` using [the instructions in their official documentation](https://asdf-vm.com/guide/getting-started.html#getting-started).
 This will involve a step to modify your shell profile file -- make sure you do this to complete the installation.
@@ -62,12 +62,10 @@ activated automatically when you enter the repo.
 
 There are two ways to interact with the virtual environment:
 
-1. Use `poetry run <command>` to run commands within the virtual environment. For example, `poetry run inv -l` will list
-all of our invoke commands.
-2. Use `poetry shell` to start a shell within the virtual environment. This is closest to the usual virtual environment
-experience. Use `poetry exit` or `deactivate` when you are done.
+1. Use `poetry run <command>` to run commands within the virtual environment. For example, `poetry run inv -l` will list all of our invoke commands.
+2. Use `poetry shell` to start a shell within the virtual environment. This is closest to the usual virtual environment experience. Use `poetry exit` or `deactivate` when you are done.
 
-If you would like to configure your IDE interpreter to point at this virutal environment, use `poetry env info --path`
+If you would like to configure your IDE interpreter to point at this virtual environment, use `poetry env info --path`
 to get its path.
 
 For more information about using Poetry, refer to their [official documentation](https://python-poetry.org/).
@@ -78,7 +76,7 @@ This project uses [PyInvoke](https://www.pyinvoke.org/) to aggregate all useful 
 
 ```sh
 > inv -l
-````
+```
 
 Read more about [invoke here](https://truss-dds.atlassian.net/wiki/spaces/eng/pages/50790405/Invoke).
 
