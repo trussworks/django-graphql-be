@@ -1,7 +1,10 @@
-from invoke import Collection
-from . import db, build
-from .logging import *
 import logging
+import logging.config
+
+from invoke import Collection
+from server.logging import LOGGING
+
+from . import build, db
 
 logging.config.dictConfig(LOGGING)
 log = logging.getLogger(__name__)

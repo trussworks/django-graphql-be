@@ -1,8 +1,6 @@
-from datetime import datetime
 import json
 import logging
 import os
-from typing import Dict
 
 
 class JsonFormatter(logging.Formatter):
@@ -49,7 +47,7 @@ class JsonFormatter(logging.Formatter):
 
 # Create a DictConfig for logging
 # https://docs.python.org/3/library/logging.config.html#logging-config-dictschema
-LOGGING: Dict = {
+LOGGING: dict = {
     'version': 1,
     'disable_existing_loggers': False,
 
