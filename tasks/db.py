@@ -1,6 +1,5 @@
 import logging
 import os
-from re import X
 import time
 from typing import cast
 
