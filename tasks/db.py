@@ -1,6 +1,5 @@
 import logging
 import os
-from re import X
 import time
 from typing import cast
 
@@ -19,21 +18,19 @@ class Database:
         self.image = 'postgres:12.7'
         self.psql_cmd = '/usr/local/bin/psql --variable "ON_ERROR_STOP=1"'
 
-    def conninfo(self, db: str = '') -> str:
+    def conninfo(self, db_name: str = '') -> str:
         """
         Returns a connection info string to use with psql command.
         Defaults to no specific db, select db if needed
         """
-        return f"postgres://postgres:{self.password}@localhost:{self.port}/{db}"
+        return f"postgres://postgres:{self.password}@localhost:{self.port}/{db_name}"
 
-    def check(self, c: Context, db: str = '', retry: int = 3, sleep: int = 1) -> None:  #type: ignore[no-any-unimported]
-        """
-        Attempt to connect to the postgres instance.
-        """
+    def check(self, c: Context, db_name: str = '', retry: int = 3, sleep: int = 1) -> None:
+        """Attempt to connect to the postgres instance"""
 
         for i in range(retry):
             try:
-                c.run(f"{self.psql_cmd} {self.conninfo()} -c 'SELECT 1;'", hide=True)
+                c.run(f"{self.psql_cmd} {self.conninfo(db_name)} -c 'SELECT 1;'", hide=True)
             except UnexpectedExit:
                 log.warning("Could not connect to db, retrying...")
                 time.sleep(sleep)
@@ -45,10 +42,8 @@ class Database:
             log.info("Success! Connected.")
             break
 
-    def create(self, c: Context) -> None:  #type: ignore[no-any-unimported]
-        """
-        Create a database in the docker container
-        """
+    def create(self, c: Context) -> None:
+        """Create a database in the docker container"""
         cmd = f"CREATE DATABASE {self.name};"
         log.info(cmd)
         c.run(f"{self.psql_cmd} {self.conninfo()} -c \"{cmd}\"")
@@ -66,13 +61,12 @@ db = Database(
 
 
 @task(default=True)
-def start(c):  #type: ignore[no-any-unimported]
+def start(c):
     # type: (Context) -> None
     """
     Restart (or create) the docker container with the database
     """
     log.info("Start the database container")
-    result = None
     create_db = False
     try:
         c.run(f"docker start {db.container}")
@@ -81,9 +75,8 @@ def start(c):  #type: ignore[no-any-unimported]
     except UnexpectedExit:
 
         log.error("Unable to start container, create a new database container")
-        result = c.run(
-            f"docker run -d --name {db.container} -e POSTGRES_PASSWORD={db.password} -p {db.port}:{db.docker_port} {db.image}"
-        )
+        c.run(f"docker run -d --name {db.container} -e POSTGRES_PASSWORD={db.password} -p {db.port}:{db.docker_port} "
+              f"{db.image}")
 
         # ^^ c.run by default exits if a command fails
         log.info(f"Success! Container {db.container} running")
@@ -98,7 +91,7 @@ def start(c):  #type: ignore[no-any-unimported]
 
 
 @task(pre=[start])
-def create(c):  #type: ignore[no-any-unimported]
+def create(c):
     # type: (Context) -> None
     """
     Create the database in the docker container
@@ -110,21 +103,21 @@ def create(c):  #type: ignore[no-any-unimported]
         log.exception(f"Error executing: {e.result.command}")
 
 
-@task()
-def check(c):  #type: ignore[no-any-unimported]
+@task
+def check(c):
     # type: (Context) -> None
     """
     Check that you can connect to the database in the docker container
     """
     log.info(f"Connecting to {db.name}")
     try:
-        db.check(c, db=db.name)
+        db.check(c, db_name=db.name)
     except UnexpectedExit as e:
         log.error(f"Error executing: {e.result.command}")
 
 
-@task()
-def destroy(c):  #type: ignore[no-any-unimported]
+@task
+def destroy(c):
     # type: (Context) -> None
     """
     Destroy the database and the docker container

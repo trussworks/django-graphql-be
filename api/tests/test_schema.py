@@ -8,8 +8,7 @@ from snapshottest.pytest import PyTestSnapshotTest
 from .conftest import ClientQueryType, API_TESTS_DATA_DIR
 
 
-def test_all_cases(  # type: ignore[no-any-unimported]
-        db: None, client_query: ClientQueryType, snapshot: PyTestSnapshotTest) -> None:
+def test_all_cases(db: None, client_query: ClientQueryType, snapshot: PyTestSnapshotTest) -> None:
     """Test the resolver for returning all cases from DB"""
 
     # Load test data into the database:
