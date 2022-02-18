@@ -188,3 +188,18 @@ asdf: No version set for command pg_config
 ```text
 > asdf global postgres 12.7
 ```
+
+### System is using wrong version of asdf
+
+**Issue:** Typing command: `poetry shell` throws an asdf error. The error shows asdf trying to use `0.8.1_1`. Typing `asdf version` returns v0.9.0, which is a version mis-match.
+
+```text
+~/.asdf/shims/python: line 3: /usr/local/Cellar/asdf/0.8.1_1/libexec/bin/asdf: No such file or directory
+```
+
+**Fix:** Manually update [asdf shims](https://github.com/asdf-vm/asdf/issues/1115#issuecomment-1018009184)
+
+```text
+> rm ~/.asdf/shims/*
+> asdf reshim
+```
