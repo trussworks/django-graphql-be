@@ -1,8 +1,7 @@
 """Constant values for the API"""
 ChoicesType = list[
     # (database value, display value)
-    tuple[str, str]
-]
+    tuple[str, str]]
 
 # Color coding for SITH cases; denotes severity
 COLOR_CODE_GRAY = "gray"

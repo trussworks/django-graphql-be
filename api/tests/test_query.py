@@ -2,9 +2,11 @@
 from typing import cast
 
 import pytest
+import sqlparse
 from graphql.language import parser, ast, source
 from graphene import ResolveInfo
 from snapshottest.pytest import PyTestSnapshotTest
+from django.db.models import sql
 
 from api.query import GrapheneQueryMixin, ImplementationError
 from api.models import Case
@@ -134,7 +136,12 @@ class TestGrapheneQueryMixinSQL:
 
         return cast(ResolveInfo, MockResolveInfo())
 
-    def test_case_query_simple(self, snapshot: PyTestSnapshotTest) -> None:  # type: ignore[no-any-unimported]
+    @staticmethod
+    def pretty_print_sql(query: sql.Query) -> str:
+        """Parse a QuerySet into a string of well-formatted SQL"""
+        return sqlparse.format(str(query), reindent=True, keyword_case='upper')
+
+    def test_case_query_simple(self, snapshot: PyTestSnapshotTest) -> None:
         """Test that a simple request results in a simple query"""
         mock_simple_cases_query = self.mock_resolve_info('''
           allCases {
@@ -145,9 +152,9 @@ class TestGrapheneQueryMixinSQL:
           }
         ''')
         query = Case.build_optimized_query(mock_simple_cases_query).all().query
-        snapshot.assert_match(str(query))
+        snapshot.assert_match(self.pretty_print_sql(query))
 
-    def test_case_query_complex(self, snapshot: PyTestSnapshotTest) -> None:  # type: ignore[no-any-unimported]
+    def test_case_query_complex(self, snapshot: PyTestSnapshotTest) -> None:
         """Test that a complex request adds expected complexity to the query"""
         mock_complex_cases_query = self.mock_resolve_info('''
           allCases {
@@ -169,7 +176,7 @@ class TestGrapheneQueryMixinSQL:
           }
         ''')
         query = Case.build_optimized_query(mock_complex_cases_query).all().query
-        snapshot.assert_match(str(query))
+        snapshot.assert_match(self.pretty_print_sql(query))
 
     def test_build_optimized_query__implementation_error(self) -> None:
         """
