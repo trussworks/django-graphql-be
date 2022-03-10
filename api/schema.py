@@ -9,11 +9,13 @@ from .models import Person, Incident
 
 
 class PersonType(DjangoObjectType):
+
     class Meta:
         model = Person
 
 
 class IncidentType(DjangoObjectType):
+
     class Meta:
         model = Incident
 

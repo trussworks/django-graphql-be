@@ -7,9 +7,8 @@ from snapshottest.pytest import PyTestSnapshotTest
 from .conftest import PopulateDbType, ClientQueryType
 
 
-def test_all_incidents(
-    populate_db: PopulateDbType, client_query: ClientQueryType, snapshot: PyTestSnapshotTest
-) -> None:
+def test_all_incidents(populate_db: PopulateDbType, client_query: ClientQueryType,
+                       snapshot: PyTestSnapshotTest) -> None:
     """Test the resolver for returning all incidents from DB"""
 
     # Load default test data into the database:
