@@ -9,7 +9,7 @@ from snapshottest.pytest import PyTestSnapshotTest
 from django.db.models import sql
 
 from api.query import GrapheneQueryMixin, ImplementationError
-from api.models import Case
+from api.models import Incident
 
 
 def graphql_parser(gql_snippet: str) -> parser.Parser:
@@ -32,7 +32,7 @@ class TestGrapheneQueryMixinArgs:
         subject {
           firstName
           lastName
-          cases {
+          incidents {
             id
             summary
           }
@@ -40,11 +40,11 @@ class TestGrapheneQueryMixinArgs:
         analyst {
           firstName
           lastName
-          cases {
+          incidents {
             summary
             status
           }
-          casesAssigned {
+          incidentsAssigned {
             colorCode
           }
         }
@@ -76,11 +76,11 @@ class TestGrapheneQueryMixinArgs:
             """All of the fields here are in the default selection set and should thus all be in the resulting args"""
 
             select_fields = ("analyst", )
-            prefetch_fields = ("subject__cases", )
+            prefetch_fields = ("subject__incidents", )
 
         select_args, prefetch_args = SelectedFields._find_query_args(self.default_selections())
         assert select_args == ["analyst"]
-        assert prefetch_args == ["subject__cases"]
+        assert prefetch_args == ["subject__incidents"]
 
     def test_find_query_args__non_selected(self) -> None:
         """
@@ -102,11 +102,12 @@ class TestGrapheneQueryMixinArgs:
         class OnlyPrefetchFields(GrapheneQueryMixin):
             """This mock model only defines prefetch fields"""
 
-            prefetch_fields = ("cases", "subject__cases", "subject__cases_assigned")
+            prefetch_fields = ("cases", "subject__incidents", "subject__incidents_assigned")
 
         select_args, prefetch_args = OnlyPrefetchFields._find_query_args(self.default_selections())
         assert select_args == []
-        assert prefetch_args == ["subject__cases"]  # neither `cases` nor `subject__cases_assigned` were selected
+        # verify neither `incidents` nor `subject__incidents_assigned` were selected:
+        assert prefetch_args == ["subject__incidents"]
 
     def test_find_query_args__prefixed(self) -> None:
         """Specifying a prefix should limit which fields are recognized as a query args"""
@@ -144,20 +145,20 @@ class TestGrapheneQueryMixinSQL:
     def test_case_query_simple(self, snapshot: PyTestSnapshotTest) -> None:
         """Test that a simple request results in a simple query"""
         mock_simple_cases_query = self.mock_resolve_info('''
-          allCases {
+          allIncidents {
             id
             summary
             status
             colorCode
           }
         ''')
-        query = Case.build_optimized_query(mock_simple_cases_query).all().query
+        query = Incident.build_optimized_query(mock_simple_cases_query).all().query
         snapshot.assert_match(self.pretty_print_sql(query))
 
     def test_case_query_complex(self, snapshot: PyTestSnapshotTest) -> None:
         """Test that a complex request adds expected complexity to the query"""
         mock_complex_cases_query = self.mock_resolve_info('''
-          allCases {
+          allIncidents {
             id
             summary
             status
@@ -165,7 +166,7 @@ class TestGrapheneQueryMixinSQL:
             subject {
               firstName
               lastName
-              cases {
+              incidents {
                 id
               }
             }
@@ -175,7 +176,7 @@ class TestGrapheneQueryMixinSQL:
             }
           }
         ''')
-        query = Case.build_optimized_query(mock_complex_cases_query).all().query
+        query = Incident.build_optimized_query(mock_complex_cases_query).all().query
         snapshot.assert_match(self.pretty_print_sql(query))
 
     def test_build_optimized_query__implementation_error(self) -> None:
@@ -187,7 +188,7 @@ class TestGrapheneQueryMixinSQL:
             """This class was not subclassed with a Model, and thus should fail"""
 
         mock_resolve_info = self.mock_resolve_info('''
-          allCases {
+          allIncidents {
             id
           }
         ''')

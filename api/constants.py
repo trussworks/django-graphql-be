@@ -3,7 +3,7 @@ ChoicesType = list[
     # (database value, display value)
     tuple[str, str]]
 
-# Color coding for SITH cases; denotes severity
+# Color coding for SITH incidents; denotes severity
 COLOR_CODE_GRAY = "gray"
 COLOR_CODE_BLUE = "blue"
 COLOR_CODE_PURPLE = "purple"
@@ -16,7 +16,7 @@ COLOR_CODE_CHOICES: ChoicesType = [
     (COLOR_CODE_BROWN, COLOR_CODE_BROWN),
 ]
 
-# Status options for SITH cases
+# Status options for SITH incidents
 STATUS_PRE_INQUIRY = "pre-inquiry"
 STATUS_IN_PROGRESS = "in progress"
 STATUS_INACTIVE = "zero - inactive"

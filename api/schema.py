@@ -5,7 +5,7 @@ import graphene
 from graphene_django import DjangoObjectType
 from django.db.models import QuerySet
 
-from .models import Person, Case
+from .models import Person, Incident
 
 
 class PersonType(DjangoObjectType):
@@ -13,19 +13,19 @@ class PersonType(DjangoObjectType):
         model = Person
 
 
-class CaseType(DjangoObjectType):
+class IncidentType(DjangoObjectType):
     class Meta:
-        model = Case
+        model = Incident
 
 
 class Query(graphene.ObjectType):
     hello = graphene.String(default_value="Hello World!")
-    all_cases = graphene.List(CaseType)
+    all_incidents = graphene.List(IncidentType)
     all_people = graphene.List(PersonType)
 
     @staticmethod
-    def resolve_all_cases(root: Optional[type], info: graphene.ResolveInfo) -> QuerySet:
-        return Case.build_optimized_query(info).all()
+    def resolve_all_incidents(root: Optional[type], info: graphene.ResolveInfo) -> QuerySet:
+        return Incident.build_optimized_query(info).all()
 
     @staticmethod
     def resolve_all_people(root: Optional[type], info: graphene.ResolveInfo) -> QuerySet:

@@ -6,7 +6,7 @@ from django.db.models import ProtectedError
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
 
-from api.models import Person, Case
+from api.models import Person, Incident
 from api.constants import COLOR_CODE_CHOICES
 
 
@@ -58,22 +58,22 @@ class TestModelPerson:
 
 
 @pytest.mark.django_db
-class TestModelCase:
+class TestModelIncident:
 
     def test_str(self) -> None:
-        """Test that the string representation of a Case is what we expect"""
-        case = Case(subject=self.create_subject(commit=False))
-        assert str(case) == f"{case.subject} - [N/A]"
+        """Test that the string representation of an Incident is what we expect"""
+        incident = Incident(subject=self.create_subject(commit=False))
+        assert str(incident) == f"{incident.subject} - [N/A]"
 
-        case.summary = "test summary"
-        assert str(case) == f"{case.subject} - {case.summary}"
+        incident.summary = "test summary"
+        assert str(incident) == f"{incident.subject} - {incident.summary}"
 
     def test_create_no_subject_failure(self) -> None:
-        """A case should require a Person subject to be associated with it, so a create should fail without one"""
-        case = Case()
+        """An incident should require a Person subject to be associated with it, so a create should fail without one"""
+        incident = Incident()
 
         with pytest.raises(IntegrityError) as e:
-            case.save()
+            incident.save()
 
         # Check that the subject_id column did indeed cause the error
         assert "subject_id" in str(e.value)
@@ -83,51 +83,52 @@ class TestModelCase:
         fake_color_code = "fake"
         assert not any(fake_color_code in choice for choice in COLOR_CODE_CHOICES)
 
-        case = Case(subject=self.create_subject(), received_at=datetime.now(), color_code=fake_color_code)
+        incident = Incident(subject=self.create_subject(), received_at=datetime.now(), color_code=fake_color_code)
 
         with pytest.raises(ValidationError) as e:
-            case.full_clean()  # this is the method that validates Django models, `save()` does not do this by default
+            # this is the method that validates Django models, `save()` does not do this by default:
+            incident.full_clean()
 
         # Verify that the field we were testing is indeed one of the errors
         assert "color_code" in e.value.error_dict
 
     def test_delete_analyst(self) -> None:
         """
-        Test deleting the Person record for an `analyst` to see that the field becomes NULL on the Case record
+        Test deleting the Person record for an `analyst` to see that the field becomes NULL on the Incident record
         """
         analyst = Person(first_name="Test", last_name="Analyst")
         analyst.save()
         assert analyst.pk is not None
 
-        # Create a case record
-        case = Case(subject=self.create_subject(), analyst=analyst)
-        case.save()
-        assert case.pk is not None
+        # Create an incident record
+        incident = Incident(subject=self.create_subject(), analyst=analyst)
+        incident.save()
+        assert incident.pk is not None
 
-        # Delete the analyst for the case
+        # Delete the analyst for the incident
         analyst.delete()
 
-        # Re-retrieve the case from the DB
-        case = Case.objects.get(pk=case.pk)
-        assert case.analyst is None
+        # Re-retrieve the incident from the DB
+        incident = Incident.objects.get(pk=incident.pk)
+        assert incident.analyst is None
 
     def test_delete_subject_failure(self) -> None:
         """
         Test attempting to delete a Person record for a `subject` and verify that we receive an error
         """
         subject = self.create_subject()
-        case = Case(subject=subject)
-        case.save()
-        assert case.pk is not None
+        incident = Incident(subject=subject)
+        incident.save()
+        assert incident.pk is not None
 
-        # Try to delete the subject of the case, but expect an error from the database
+        # Try to delete the subject of the incident, but expect an error from the database
         with pytest.raises(ProtectedError):
             subject.delete()  # no assertion, the above catch is the assertion
 
     @staticmethod
     def create_subject(commit: bool = True) -> Person:
-        """Create a subject for a case record"""
-        subject = Person(first_name="Test", last_name="Case Subject")
+        """Create a subject for an incident record"""
+        subject = Person(first_name="Test", last_name="Incident Subject")
         if commit:
             subject.save()
             assert subject.pk is not None
