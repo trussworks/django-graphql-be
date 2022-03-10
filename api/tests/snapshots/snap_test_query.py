@@ -7,7 +7,7 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots['TestGrapheneQueryMixinSQL.test_case_query_complex 1'] = '''SELECT "api_incident"."id",
+snapshots['TestGrapheneQueryMixinSQL.test_incident_query_complex 1'] = '''SELECT "api_incident"."id",
        "api_incident"."subject_id",
        "api_incident"."analyst_id",
        "api_incident"."summary",
@@ -30,7 +30,7 @@ FROM "api_incident"
 INNER JOIN "api_person" ON ("api_incident"."subject_id" = "api_person"."id")
 LEFT OUTER JOIN "api_person" T3 ON ("api_incident"."analyst_id" = T3."id")'''
 
-snapshots['TestGrapheneQueryMixinSQL.test_case_query_simple 1'] = '''SELECT "api_incident"."id",
+snapshots['TestGrapheneQueryMixinSQL.test_incident_query_simple 1'] = '''SELECT "api_incident"."id",
        "api_incident"."subject_id",
        "api_incident"."analyst_id",
        "api_incident"."summary",

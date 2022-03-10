@@ -102,7 +102,7 @@ class TestGrapheneQueryMixinArgs:
         class OnlyPrefetchFields(GrapheneQueryMixin):
             """This mock model only defines prefetch fields"""
 
-            prefetch_fields = ("cases", "subject__incidents", "subject__incidents_assigned")
+            prefetch_fields = ("incidents", "subject__incidents", "subject__incidents_assigned")
 
         select_args, prefetch_args = OnlyPrefetchFields._find_query_args(self.default_selections())
         assert select_args == []
@@ -142,9 +142,9 @@ class TestGrapheneQueryMixinSQL:
         """Parse a QuerySet into a string of well-formatted SQL"""
         return sqlparse.format(str(query), reindent=True, keyword_case='upper')
 
-    def test_case_query_simple(self, snapshot: PyTestSnapshotTest) -> None:
+    def test_incident_query_simple(self, snapshot: PyTestSnapshotTest) -> None:
         """Test that a simple request results in a simple query"""
-        mock_simple_cases_query = self.mock_resolve_info('''
+        mock_simple_incidents_query = self.mock_resolve_info('''
           allIncidents {
             id
             summary
@@ -152,12 +152,12 @@ class TestGrapheneQueryMixinSQL:
             colorCode
           }
         ''')
-        query = Incident.build_optimized_query(mock_simple_cases_query).all().query
+        query = Incident.build_optimized_query(mock_simple_incidents_query).all().query
         snapshot.assert_match(self.pretty_print_sql(query))
 
-    def test_case_query_complex(self, snapshot: PyTestSnapshotTest) -> None:
+    def test_incident_query_complex(self, snapshot: PyTestSnapshotTest) -> None:
         """Test that a complex request adds expected complexity to the query"""
-        mock_complex_cases_query = self.mock_resolve_info('''
+        mock_complex_incidents_query = self.mock_resolve_info('''
           allIncidents {
             id
             summary
@@ -176,7 +176,7 @@ class TestGrapheneQueryMixinSQL:
             }
           }
         ''')
-        query = Incident.build_optimized_query(mock_complex_cases_query).all().query
+        query = Incident.build_optimized_query(mock_complex_incidents_query).all().query
         snapshot.assert_match(self.pretty_print_sql(query))
 
     def test_build_optimized_query__implementation_error(self) -> None:
