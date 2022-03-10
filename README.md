@@ -96,6 +96,22 @@ Create and run the database using invoke
 inv db.start
 ```
 
+#### Migrate the Database
+
+Once you've created a database, you'll need to apply our migrations so that you can use it:
+
+```shell
+python manage.py migrate
+```
+
+#### Load Test Data
+
+After the database has been migrated, you can load our default fixture with test data:
+
+```shell
+python manage.py loaddata api/fixtures/default.json
+```
+
 ### Run the Backend
 
 Run the server
@@ -203,3 +219,13 @@ asdf: No version set for command pg_config
 > rm ~/.asdf/shims/*
 > asdf reshim
 ```
+
+### Poetry dependencies are out of sync
+
+Sometimes your dependencies just get all borked up. One of the easiest ways to set things right again is to burn it all down and do a fresh install.
+
+To do so, you'll first need to remove the virtual environment that Poetry automatically created for the project. Find it with `poetry env list`.
+
+Next, you should remove it with `poetry env remove <name-of-your-env-here>`.
+
+Finally, run `poetry install` to make a new environment and re-install all the dependencies from scratch.
