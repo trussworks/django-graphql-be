@@ -1,0 +1,23 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  asdf_setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Install asdf plugins
+        uses: asdf-vm/actions/install@v1
+
+      - name: Install Python packages
+        run: poetry install
+
+      - name: Run unit tests
+        run: poetry run inv build.mypy
