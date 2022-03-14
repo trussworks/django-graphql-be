@@ -20,12 +20,14 @@ ClientQueryParams = Union[str, dict, Client]
 
 
 class ClientQueryType(Protocol):
+
     def __call__(self, query: str, **kwargs: ClientQueryParams) -> HttpResponse:
         ...
 
 
 class PopulateDbType(Protocol):
     """Callable type that, given an optional string scenario, loads a fixture to the test db"""
+
     def __call__(self, scenario: str = ...) -> None:
         ...
 
@@ -43,6 +45,7 @@ def populate_db(db: None) -> Generator[PopulateDbType, None, None]:
     :return:
         A callable that can be used to specify which fixture gets loaded for the test. Useful for testing scenarios.
     """
+
     def load_fixture(scenario: str = "default") -> None:
         call_command("loaddata", path.join(API_FIXTURES_DIR, f"{scenario}.json"))
 
@@ -52,6 +55,7 @@ def populate_db(db: None) -> Generator[PopulateDbType, None, None]:
 @pytest.fixture
 def client_query(client: Client) -> ClientQueryType:
     """Use the Django `client` fixture with graphql_query"""
+
     def func(query: str, **kwargs: ClientQueryParams) -> HttpResponse:
         return graphql_query(query, **kwargs, client=client)
 

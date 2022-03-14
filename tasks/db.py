@@ -9,6 +9,7 @@ log = logging.getLogger(__name__)
 
 
 class Database:
+
     def __init__(self, container: str, name: str, password: str, port: int, docker_port: int) -> None:
         self.container = container
         self.name = name

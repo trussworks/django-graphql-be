@@ -7,6 +7,7 @@ from .conftest import ClientQueryType
 
 
 class TestHello:
+
     def test_hello(self, client_query: ClientQueryType, snapshot: PyTestSnapshotTest) -> None:
         """Test the hello query in the GraphQL schema/API definition"""
         response: HttpResponse = client_query('''

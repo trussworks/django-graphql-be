@@ -7,15 +7,16 @@ from snapshottest.pytest import PyTestSnapshotTest
 from .conftest import PopulateDbType, ClientQueryType
 
 
-def test_all_cases(populate_db: PopulateDbType, client_query: ClientQueryType, snapshot: PyTestSnapshotTest) -> None:
-    """Test the resolver for returning all cases from DB"""
+def test_all_incidents(populate_db: PopulateDbType, client_query: ClientQueryType,
+                       snapshot: PyTestSnapshotTest) -> None:
+    """Test the resolver for returning all incidents from DB"""
 
     # Load default test data into the database:
     populate_db()
 
     response: HttpResponse = client_query('''
         query {
-          allCases {
+          allIncidents {
             id
             subject {
               firstName
@@ -51,13 +52,13 @@ def test_all_people(populate_db: PopulateDbType, client_query: ClientQueryType, 
             id
             firstName
             lastName
-            cases {
+            incidents {
               summary
               colorCode
               status
               receivedAt
             }
-            casesAssigned {
+            incidentsAssigned {
               summary
               colorCode
               status
