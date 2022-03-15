@@ -12,18 +12,23 @@ class PersonType(DjangoObjectType):
 
     class Meta:
         model = Person
+        description = "The Person resource contains information about people such as the subject of an incident report"
 
 
 class IncidentType(DjangoObjectType):
 
     class Meta:
         model = Incident
+        description = "The Incident contains information about a specific incident and case. It is usually associated with a subject Person"
 
 
 class Query(graphene.ObjectType):
-    hello = graphene.String(default_value="Hello World!")
-    all_incidents = graphene.List(IncidentType)
-    all_people = graphene.List(PersonType)
+    hello = graphene.String(default_value="Hello World!", description="Returns a Hello World! string")
+    all_incidents = graphene.List(IncidentType, description="Returns a list of Incidents")
+    all_people = graphene.List(PersonType, description="Returns a list of Person entries")
+
+    class Meta:
+        description = "Queries in GraphQl request information from the server"
 
     @staticmethod
     def resolve_all_incidents(root: Optional[type], info: graphene.ResolveInfo) -> QuerySet:
