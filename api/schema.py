@@ -34,4 +34,21 @@ class Query(graphene.ObjectType):
         return Person.build_optimized_query(info).all()
 
 
-schema = graphene.Schema(query=Query)
+class CreatePerson(graphene.Mutation):
+    
+    class Arguments:
+        first_name = graphene.String()
+    
+    person = graphene.Field(PersonType)
+
+    def mutate(self, info, first_name):
+        person = Person(first_name=first_name)
+        person.save()
+        return CreatePerson(person=person)
+
+
+class Mutation(graphene.ObjectType):
+    create_person = CreatePerson.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
