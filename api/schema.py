@@ -38,11 +38,12 @@ class CreatePerson(graphene.Mutation):
     
     class Arguments:
         first_name = graphene.String()
+        last_name = graphene.String()
     
     person = graphene.Field(PersonType)
 
-    def mutate(self, info, first_name):
-        person = Person(first_name=first_name)
+    def mutate(self, info, first_name, last_name):
+        person = Person(first_name=first_name, last_name=last_name)
         person.save()
         return CreatePerson(person=person)
 
