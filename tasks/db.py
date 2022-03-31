@@ -9,11 +9,11 @@ log = logging.getLogger(__name__)
 
 
 class Database:
-
-    def __init__(self, container: str, name: str, password: str, port: int, docker_port: int) -> None:
+    def __init__(self, container: str, name: str, password: str, host: str, port: int, docker_port: int) -> None:
         self.container = container
         self.name = name
         self.password = password
+        self.host = host
         self.port = port
         self.docker_port = docker_port
         self.image = 'postgres:12.7'
@@ -24,7 +24,7 @@ class Database:
         Returns a connection info string to use with psql command.
         Defaults to no specific db, select db if needed
         """
-        return f"postgres://postgres:{self.password}@localhost:{self.port}/{db_name}"
+        return f"postgres://postgres:{self.password}@{self.host}:{self.port}/{db_name}"
 
     def check(self, c: Context, db_name: str = '', retry: int = 3, sleep: int = 1) -> None:
         """Attempt to connect to the postgres instance"""
@@ -56,6 +56,7 @@ db = Database(
     container='sith-dev-db',
     name=os.environ.get('DB_NAME', ''),
     password=os.environ.get('DB_PASSWORD', ''),
+    host=os.environ.get('DB_HOST', 'localhost'),
     port=cast(int, os.environ.get('DB_PORT')),
     docker_port=5432,
 )
