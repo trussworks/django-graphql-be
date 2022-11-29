@@ -27,7 +27,7 @@ django-graphiql-debug-toolbar = "^0.2.0"
 stringcase = "^1.2.0"
 
 [tool.poetry.dev-dependencies]
-lxml = "^4.7.1"
+lxml = "^4.9.1"
 yapf = "^0.32.0"
 
 [build-system]
