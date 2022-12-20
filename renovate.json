@@ -1,6 +1,36 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+"$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base"
-  ]
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "description": "Tag the waddlers Github Team for major updates",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "reviewers": [
+        "team:waddlers"
+      ]
+    },
+    {
+      "automerge": true,
+      "description": "Group minor and patch updates into a single PR",
+      "groupName": "dependencies",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ]
+    }
+  ],
+  "schedule": [
+    "every weekend"
+  ],
+  "separateMinorPatch": true,
+  "timezone": "America/Los_Angeles"
 }
