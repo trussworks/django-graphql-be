@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots['TestGrapheneQueryMixinSQL.test_incident_query_complex 1'] = '''SELECT "api_incident"."id",
