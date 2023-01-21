@@ -164,14 +164,14 @@ graphene-django = ">=2.0.0"
 
 [[package]]
 name = "django-stubs"
-version = "1.13.1"
+version = "1.13.2"
 description = "Mypy stubs for Django"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "django-stubs-1.13.1.tar.gz", hash = "sha256:bcc618ba353dabc540d982b9dac1d5a1921652f8fc2a13653d545a57d5e3cc0f"},
-    {file = "django_stubs-1.13.1-py3-none-any.whl", hash = "sha256:fbf2ee6a4bce76c3eb5f6707ccadb4cf1c2f1ec485e8c44701ca8de2d0a5df18"},
+    {file = "django-stubs-1.13.2.tar.gz", hash = "sha256:19e97efecfaf80e42c479ee7ed6179f3120c1b2c11e665b2e8305457e41ee069"},
+    {file = "django_stubs-1.13.2-py3-none-any.whl", hash = "sha256:f9edb3ef09ac2a014b111d894d86376a70b447f13fe7905ea6c0752e08a1514a"},
 ]
 
 [package.dependencies]
@@ -1033,4 +1033,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "7b27cc77b3fe447efcc43717364f3c575d8b97199b8d751f325bbbbe51804165"
+content-hash = "76bf64617dba7074dd980b10fbd115e6c5bfcbbf55d3bf46666d2f21cbc49b98"
